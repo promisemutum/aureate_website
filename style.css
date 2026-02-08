@@ -15,18 +15,83 @@ body {
     background-attachment: fixed;
     position: relative;
     transition: background-position 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
 }
 
 .overlay {
-    display: none;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+    z-index: 1;
+    pointer-events: none;
 }
 
+.film-grain {
+    content: "";
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
+    height: 300%;
+    width: 300%;
+    position: fixed;
+    top: -100%;
+    left: -100%;
+    opacity: 0.3;
+    animation: animateGrain 8s steps(10) infinite;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: hard-light;
+}
 
+@keyframes animateGrain {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    10% {
+        transform: translate(-20%, -15%);
+    }
+
+    20% {
+        transform: translate(15%, -25%);
+    }
+
+    30% {
+        transform: translate(-10%, 20%);
+    }
+
+    40% {
+        transform: translate(25%, -5%);
+    }
+
+    50% {
+        transform: translate(-15%, 10%);
+    }
+
+    60% {
+        transform: translate(10%, -20%);
+    }
+
+    70% {
+        transform: translate(-25%, 15%);
+    }
+
+    80% {
+        transform: translate(20%, -10%);
+    }
+
+    90% {
+        transform: translate(-5%, 25%);
+    }
+}
 
 .container {
     position: relative;
     z-index: 2;
     height: 100vh;
+    width: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -45,10 +110,7 @@ body {
     cursor: pointer;
 }
 
-.logo:hover {
-    opacity: 0.7;
-    transform: scale(1.02);
-}
+/* Removed logo hover effect */
 
 .logo-section {
     display: flex;
@@ -84,11 +146,7 @@ body {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
 }
 
-.icon-wrapper:hover .icon {
-    transform: scale(1.1);
-    opacity: 0.8;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9));
-}
+/* Removed icon hover scaling/filter effect */
 
 .icon-label {
     font-family: 'Cinzel Decorative', serif;
