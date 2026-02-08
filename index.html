@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Aureate Realm - A minimalist experience">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aureaterealm.com/">
+    <meta property="og:title" content="Aureate Realm">
+    <meta property="og:description"
+        content="A minimalist experience exploring the golden boundaries of design and digital products.">
+    <meta property="og:image" content="./images/pc_background.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Aureate Realm">
+    <meta property="twitter:description"
+        content="A minimalist experience exploring the golden boundaries of design and digital products.">
+    <meta property="twitter:image" content="./images/pc_background.webp">
+
     <title>Aureate Realm</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,26 +32,26 @@
 
 <body>
     <div class="overlay"></div>
-    <div class="film-grain"></div>
+    <div class="film-grain" aria-hidden="true"></div>
 
     <main class="container">
-        <div class="logo-section">
-            <img src="./images/text.webp" alt="Logo" class="logo">
-            <div class="icons-row">
-                <a href="#" class="icon-wrapper">
-                    <img src="./images/icon1.webp" alt="Icon 1" class="icon">
+        <section class="logo-section">
+            <img src="./images/text.webp" alt="Aureate Realm Logo" class="logo" role="banner">
+            <nav class="icons-row" aria-label="Product and Social Links">
+                <a href="#" class="icon-wrapper" aria-label="Digital Products">
+                    <img src="./images/icon1.webp" alt="" class="icon" aria-hidden="true">
                     <span class="icon-label">Digital Products</span>
                 </a>
-                <a href="#" class="icon-wrapper">
-                    <img src="./images/icon2.webp" alt="Icon 2" class="icon">
+                <a href="#" class="icon-wrapper" aria-label="Shopify Store">
+                    <img src="./images/icon2.webp" alt="" class="icon" aria-hidden="true">
                     <span class="icon-label">Shopify</span>
                 </a>
-                <a href="#" class="icon-wrapper">
-                    <img src="./images/icon3.webp" alt="Icon 3" class="icon">
+                <a href="#" class="icon-wrapper" aria-label="Music Playlist">
+                    <img src="./images/icon3.webp" alt="" class="icon" aria-hidden="true">
                     <span class="icon-label">Playlist</span>
                 </a>
-            </div>
-        </div>
+            </nav>
+        </section>
     </main>
 
     <script src="app.js"></script>
