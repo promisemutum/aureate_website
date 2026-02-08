@@ -193,6 +193,14 @@ body {
     animation: fadeIn 1.2s ease-out;
 }
 
+/* Desktop Hover Effects */
+@media (min-width: 769px) {
+    .icon-wrapper:hover .icon {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     body {
