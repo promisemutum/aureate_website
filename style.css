@@ -105,7 +105,8 @@ body {
     height: 100vh;
     width: 100%;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    /* Changed from flex-start to center for vertical alignment */
     justify-content: center;
     padding: 2rem;
 }
@@ -114,7 +115,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 1rem;
+    /* Reduced gap to bring icons closer */
+    width: 100%;
+    max-width: 1200px;
+    /* Constrain width for better centering */
 }
 
 .logo {
@@ -122,11 +127,14 @@ body {
     max-width: 950px;
     height: auto;
     max-height: 400px;
-    margin-top: 15vh;
+    margin-top: 0;
+    /* Removed fixed margin to allow flex centering */
     object-fit: contain;
     animation: fadeIn 1.2s ease-out;
     transition: opacity var(--transition-standard), transform var(--transition-standard);
     cursor: pointer;
+    margin-bottom: 2rem;
+    /* Add specific spacing to icons */
 }
 
 .icons-row {
@@ -135,6 +143,13 @@ body {
     align-items: center;
     gap: 4rem;
     animation: fadeIn 1.5s ease-out;
+}
+
+.carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
 }
 
 .icon-wrapper {
@@ -207,58 +222,113 @@ body {
         background-size: cover;
         background-position: center;
         background-attachment: scroll;
+        overflow: hidden;
+        /* Prevent scrolling while dragging */
     }
 
     .container {
         padding: 1rem;
+        perspective: 1000px;
+        overflow: hidden;
     }
 
     .logo-section {
         gap: 0;
+        width: 100%;
+        height: 100%;
+        justify-content: space-between;
+        padding-bottom: 15vh;
+        /* Increased from 5vh to push icons up */
     }
 
     .logo {
-        margin-top: 2.5vh;
+        margin-top: 5vh;
         max-width: 80%;
     }
 
     .icons-row {
-        gap: 0.5rem;
-        flex-direction: column;
+        gap: 0;
         width: 100%;
+        height: 300px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Scene */
+        perspective: 1000px;
+        z-index: 10;
+    }
+
+    .carousel {
+        width: 200px;
+        height: 200px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.1s ease-out;
+        /* Smooth drag */
     }
 
     .icon-wrapper {
-        flex-direction: row;
-        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Backface visibility helps performance, but we might want to see backs of cards? */
+        /* backface-visibility: hidden; */
+    }
+
+    /* 
+     * Positioning the 3 items in a circle (triangle).
+     * 3 items -> 360 / 3 = 120deg apart.
+     * TranslateZ moves them out from center.
+     * r = width / (2 * tan(PI/n)) ~= 100 / tan(60) ~= 57px? 
+     * We want them spaced out more. Let's try 140px.
+     */
+    .icon-wrapper:nth-child(1) {
+        transform: rotateY(0deg) translateZ(140px);
+    }
+
+    .icon-wrapper:nth-child(2) {
+        transform: rotateY(120deg) translateZ(140px);
+    }
+
+    .icon-wrapper:nth-child(3) {
+        transform: rotateY(240deg) translateZ(140px);
     }
 
     .icon {
-        max-width: 12rem;
-        max-height: 12rem;
-        transition: transform var(--transition-smooth);
+        max-width: 150px;
+        max-height: 150px;
+        transition: transform var(--transition-smooth), filter var(--transition-smooth);
+        /* Dim items not in front? */
+        filter: brightness(0.5) blur(1px);
     }
 
     .icon-label {
-        position: absolute;
-        left: 50%;
-        margin-left: 60px;
-        transform: translateX(10px);
+        margin-top: 1rem;
         opacity: 0;
-        transition: all var(--transition-smooth);
-        text-align: left;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        text-align: center;
+        position: absolute;
+        bottom: -30px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        pointer-events: none;
     }
 
-    /* Active State for Touch */
-    .icon-wrapper.active .icon,
-    .icon-wrapper:hover .icon {
-        transform: translateX(-40px);
+    /* Active State (Front facing) */
+    .icon-wrapper.active .icon {
+        transform: scale(1.1);
+        filter: brightness(1) blur(0);
     }
 
-    .icon-wrapper.active .icon-label,
-    .icon-wrapper:hover .icon-label {
+    .icon-wrapper.active .icon-label {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
