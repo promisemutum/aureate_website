@@ -115,11 +115,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    /* Reduced gap to bring icons closer */
+    justify-content: space-evenly;
+    /* Proportional spacing */
+    height: 100%;
+    /* Fill container for distribution */
     width: 100%;
     max-width: 1200px;
-    /* Constrain width for better centering */
 }
 
 .logo {
@@ -127,14 +128,12 @@ body {
     max-width: 950px;
     height: auto;
     max-height: 400px;
-    margin-top: 0;
-    /* Removed fixed margin to allow flex centering */
     object-fit: contain;
     animation: fadeIn 1.2s ease-out;
     transition: opacity var(--transition-standard), transform var(--transition-standard);
     cursor: pointer;
-    margin-bottom: 2rem;
-    /* Add specific spacing to icons */
+    margin: 0;
+    /* Removed margin to let space-evenly handle it */
 }
 
 .icons-row {
@@ -175,7 +174,8 @@ body {
 
 .icon-label {
     font-family: var(--accent-font);
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    /* 20px - aligned to 4-8-16 rule */
     font-weight: 700;
     color: var(--text-color);
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
@@ -233,30 +233,34 @@ body {
     }
 
     .logo-section {
-        gap: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        /* Proportional spacing for mobile */
         width: 100%;
         height: 100%;
-        justify-content: space-between;
-        padding-bottom: 15vh;
-        /* Increased from 5vh to push icons up */
+        padding: 0;
+        /* Clear previous overrides */
     }
 
     .logo {
-        margin-top: 5vh;
+        margin: 0;
         max-width: 80%;
     }
 
     .icons-row {
         gap: 0;
         width: 100%;
-        height: 300px;
+        height: 320px;
+        /* Balanced height for carousel */
         position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        /* Scene */
         perspective: 1000px;
         z-index: 10;
+        margin: 0;
     }
 
     .carousel {
@@ -324,7 +328,7 @@ body {
     /* Active State (Front facing) */
     .icon-wrapper.active .icon {
         transform: scale(1.1);
-        filter: brightness(1) blur(0);
+        filter: brightness(1) blur(0) drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
     }
 
     .icon-wrapper.active .icon-label {
