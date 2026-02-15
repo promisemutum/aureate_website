@@ -3,6 +3,16 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
+    const clickSound = new Audio('./sound/click.mp4');
+
+    const playClickSound = () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.warn("Audio play failed:", e));
+    };
+
+    iconWrappers.forEach(wrapper => {
+        wrapper.addEventListener('click', playClickSound);
+    });
 
     // Variables for 3D Carousel
     let startX = 0;
@@ -100,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (carousel) {
             carousel.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
             carousel.style.transform = `rotateY(${targetRotation}deg)`;
+            playClickSound();
         }
 
         currentRotation = targetRotation;

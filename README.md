@@ -2,7 +2,7 @@
 
 A minimalist experience exploring the golden boundaries of design and digital products.
 
-## Current Version: 1.0.0
+## Current Version: 1.1.0
 
 This project follows semantic versioning. 
 
