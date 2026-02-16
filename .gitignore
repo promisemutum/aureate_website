@@ -2,10 +2,3 @@ node_modules/
 .DS_Store
 .env
 .idea/
-
-# Unused assets
-images/film_grain.jpg
-images/film_grain.svg
-images/background.jpeg
-images/IMG_0962.PNG
-images/WhatsApp Image*

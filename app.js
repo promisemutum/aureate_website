@@ -3,25 +3,31 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
-    const clickSound = new Audio('./sound/click.mp4');
+    const clickSound = new Audio('./sound/click.wav');
 
     const playClickSound = () => {
         clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.warn("Audio play failed:", e));
+        clickSound.play().catch(() => { });
     };
 
     iconWrappers.forEach(wrapper => {
         wrapper.addEventListener('click', playClickSound);
+        wrapper.addEventListener('mouseenter', playClickSound);
     });
 
-    // Variables for 3D Carousel
     let startX = 0;
     let currentX = 0;
     let currentRotation = 0;
     let isDragging = false;
-    let targetRotation = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocity = 0;
+    let rafId = null;
 
-    // Normalize rotation angle to positive equivalent for easy modulo
+    const STEP = 120;
+    const DRAG_SENSITIVITY = 0.5;
+    const VELOCITY_THRESHOLD = 0.3;
+
     const normalizeAngle = (angle) => {
         let a = angle % 360;
         if (a < 0) a += 360;
@@ -29,138 +35,102 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateActiveState = (rotation) => {
-        // Front is at 0 degrees (or 360, 720...)
-        // Items are at 0, 120, 240
-        // Because we rotate the PARENT, if we rotate parent -120deg, item at 120deg comes to front (0deg relative to screen)
+        const norm = normalizeAngle(-rotation);
+        let activeIndex = 0;
+        if (norm > 60 && norm <= 180) activeIndex = 1;
+        else if (norm > 180 && norm <= 300) activeIndex = 2;
 
-        let normalizedRot = normalizeAngle(-rotation); // use negative because we want the item that counteracts the rotation
-
-        // Find closest segment (0, 120, 240)
-        let activeIndex = 0; // Default to first item (0deg)
-
-        // 0 +/- 60 is item 1
-        // 120 +/- 60 is item 2
-        // 240 +/- 60 is item 3
-
-        if (normalizedRot > 60 && normalizedRot <= 180) {
-            activeIndex = 1; // 2nd item (index 1) which is at 120deg
-        } else if (normalizedRot > 180 && normalizedRot <= 300) {
-            activeIndex = 2; // 3rd item (index 2) which is at 240deg
-        } else {
-            activeIndex = 0; // 1st item (index 0) which is at 0deg
-        }
-
-        iconWrappers.forEach((wrapper, index) => {
-            if (index === activeIndex) {
-                wrapper.classList.add('active');
-                // Optional: Enable pointer events only for active item to prevent accidental clicks on side items?
-                wrapper.style.pointerEvents = "auto";
-            } else {
-                wrapper.classList.remove('active');
-                wrapper.style.pointerEvents = "none";
-            }
+        iconWrappers.forEach((wrapper, i) => {
+            const isActive = i === activeIndex;
+            wrapper.classList.toggle('active', isActive);
+            wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
         });
     };
 
-    // Initialize active state
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
         updateActiveState(0);
     }
 
-    /**
-     * Mobile Touch/Drag Interaction
-     */
     const handleDragStart = (e) => {
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
         isDragging = true;
-        startX = (e.type === 'touchstart') ? e.touches[0].clientX : e.clientX;
+        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        lastX = startX;
+        lastTime = Date.now();
+        velocity = 0;
 
-        // Remove transition for instant response
+        if (rafId) cancelAnimationFrame(rafId);
         if (carousel) carousel.style.transition = 'none';
-
-        // Disable links while dragging to prevent accidental navigation
         iconWrappers.forEach(w => w.style.pointerEvents = 'none');
     };
 
     const handleDragMove = (e) => {
         if (!isDragging || window.innerWidth > MOBILE_BREAKPOINT) return;
 
-        const x = (e.type === 'touchmove') ? e.touches[0].clientX : e.clientX;
-        const delta = x - startX;
+        const x = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const now = Date.now();
+        const dt = now - lastTime;
 
-        // Sensitivity factor: how many pixels per degree?
-        // 1px = 0.5deg
-        currentX = currentRotation + (delta * 0.5);
-        if (carousel) carousel.style.transform = `rotateY(${currentX}deg)`;
+        if (dt > 0) velocity = (x - lastX) / dt;
+        lastX = x;
+        lastTime = now;
+
+        const delta = x - startX;
+        currentX = currentRotation + delta * DRAG_SENSITIVITY;
+
+        rafId = requestAnimationFrame(() => {
+            if (carousel) carousel.style.transform = `rotateY(${currentX}deg)`;
+            updateActiveState(currentX); // Keeping this optimizations from "instant feedback" step
+        });
+    };
+
+    const snapTo = (target) => {
+        if (!carousel) return;
+        carousel.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        carousel.style.transform = `rotateY(${target}deg)`;
+        currentRotation = target;
+        playClickSound(); // Sound restored on rotation as per revert request
+
+        const onSnap = () => {
+            updateActiveState(currentRotation);
+            carousel.removeEventListener('transitionend', onSnap);
+        };
+        carousel.addEventListener('transitionend', onSnap);
     };
 
     const handleDragEnd = () => {
         if (!isDragging || window.innerWidth > MOBILE_BREAKPOINT) return;
         isDragging = false;
 
-        // Snap logic
-        // We want to snap to 0, -120, -240, -360 etc.
-        // Step size is 120.
-        const step = 120;
-
-        // Calculate target rotation
-        targetRotation = Math.round(currentX / step) * step;
-
-        // Restore transition for smooth snap
-        if (carousel) {
-            carousel.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
-            carousel.style.transform = `rotateY(${targetRotation}deg)`;
-            playClickSound();
+        // Momentum: if swiped fast, nudge by one step
+        let target;
+        if (Math.abs(velocity) > VELOCITY_THRESHOLD) {
+            const direction = velocity > 0 ? 1 : -1;
+            target = Math.round(currentRotation / STEP) * STEP + direction * STEP;
+        } else {
+            target = Math.round(currentX / STEP) * STEP;
         }
 
-        currentRotation = targetRotation;
-
-        // Determine active item after snap completes (approximate)
-        setTimeout(() => {
-            updateActiveState(currentRotation);
-        }, 100);
+        snapTo(target);
     };
 
-    // Event Listeners for Carousel Container (scene)
     const scene = document.querySelector('.icons-row');
     if (scene) {
         scene.addEventListener('mousedown', handleDragStart);
         scene.addEventListener('touchstart', handleDragStart, { passive: true });
-
         window.addEventListener('mousemove', handleDragMove);
         window.addEventListener('touchmove', handleDragMove, { passive: true });
-
         window.addEventListener('mouseup', handleDragEnd);
         window.addEventListener('touchend', handleDragEnd);
     }
 
-    /**
-     * Handle Resize
-     */
     window.addEventListener('resize', () => {
         if (window.innerWidth > MOBILE_BREAKPOINT) {
             if (carousel) carousel.style.transform = 'none';
-            // Reset styles for desktop
-            iconWrappers.forEach(w => w.style.pointerEvents = "");
+            iconWrappers.forEach(w => w.style.pointerEvents = '');
         } else {
             if (carousel) carousel.style.transform = `rotateY(${currentRotation}deg)`;
             updateActiveState(currentRotation);
         }
     });
-
-    /**
-     * Parallax Effect (Desktop only)
-     * Optional: Optimization using transform instead of background-position is recommended
-     * if re-enabled in the future for smoother performance.
-     */
-    /*
-    document.addEventListener('mousemove', (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT) {
-            const moveX = (e.clientX / window.innerWidth - 0.5) * 20;
-            const moveY = (e.clientY / window.innerHeight - 0.5) * 20;
-            document.body.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        }
-    });
-    */
 });
-

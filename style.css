@@ -7,7 +7,6 @@
     --shadow-icon: 0 2px 4px rgba(0, 0, 0, 0.8);
     --transition-standard: 0.3s ease;
     --transition-smooth: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    --mobile-breakpoint: 768px;
 }
 
 * {
@@ -20,13 +19,12 @@ body {
     font-family: var(--primary-font);
     height: 100vh;
     overflow: hidden;
-    background-image: url('./images/new_background_pc.JPEG');
+    background-image: url('./images/background_pc.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     position: relative;
-    transition: background-position 0.3s ease-out;
     display: flex;
     flex-direction: column;
 }
@@ -39,66 +37,6 @@ body {
     pointer-events: none;
 }
 
-.film-grain {
-    content: "";
-    background-image: url('./images/Noise_Texture.webp');
-    height: 300%;
-    width: 300%;
-    position: fixed;
-    top: -100%;
-    left: -100%;
-    opacity: 0;
-    animation: animateGrain 8s steps(10) infinite;
-    pointer-events: none;
-    z-index: 1;
-    mix-blend-mode: hard-light;
-    will-change: transform;
-}
-
-@keyframes animateGrain {
-
-    0%,
-    100% {
-        transform: translate(0, 0);
-    }
-
-    10% {
-        transform: translate(-5%, -10%);
-    }
-
-    20% {
-        transform: translate(-15%, 5%);
-    }
-
-    30% {
-        transform: translate(7%, -25%);
-    }
-
-    40% {
-        transform: translate(-5%, 25%);
-    }
-
-    50% {
-        transform: translate(-15%, 10%);
-    }
-
-    60% {
-        transform: translate(15%, 0%);
-    }
-
-    70% {
-        transform: translate(0%, 15%);
-    }
-
-    80% {
-        transform: translate(3%, 35%);
-    }
-
-    90% {
-        transform: translate(-10%, 10%);
-    }
-}
-
 .container {
     position: relative;
     z-index: 2;
@@ -106,7 +44,6 @@ body {
     width: 100%;
     display: flex;
     align-items: center;
-    /* Changed from flex-start to center for vertical alignment */
     justify-content: center;
     padding: 2rem;
 }
@@ -118,22 +55,8 @@ body {
     justify-content: flex-start;
     padding-top: 60vh;
     height: 100%;
-    /* Fill container for distribution */
     width: 100%;
     max-width: 1200px;
-}
-
-.logo {
-    width: auto;
-    max-width: 950px;
-    height: auto;
-    max-height: 400px;
-    object-fit: contain;
-    animation: fadeIn 1.2s ease-out;
-    transition: opacity var(--transition-standard), transform var(--transition-standard);
-    cursor: pointer;
-    margin: 0;
-    /* Removed margin to let space-evenly handle it */
 }
 
 .icons-row {
@@ -165,17 +88,29 @@ body {
 .icon {
     width: auto;
     max-width: 200px;
-    height: auto;
-    max-height: 200px;
+    height: 230px;
+    /* Fixed height aligns text */
     object-fit: contain;
     transition: transform var(--transition-standard), opacity var(--transition-standard), filter var(--transition-standard);
     filter: drop-shadow(var(--shadow-icon));
 }
 
+.icon-wrapper:nth-child(3) .icon {
+    max-width: 250px;
+    transform: scale(1.2);
+    /* Enlarge visually without affecting layout */
+    transform-origin: center center;
+}
+
+.icon-wrapper:nth-child(3):hover .icon {
+    transform: scale(1.3);
+    /* Slightly larger on hover */
+}
+
 .icon-label {
     font-family: var(--accent-font);
-    font-size: 1.25rem;
-    /* 20px - aligned to 4-8-16 rule */
+    font-size: 1.5rem;
+    /* Increased from 1.25rem */
     font-weight: 700;
     color: var(--text-color);
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
@@ -203,11 +138,7 @@ body {
     }
 }
 
-.fade-in {
-    animation: fadeIn 1.2s ease-out;
-}
-
-/* Desktop Interactions */
+/* Desktop */
 @media (min-width: 769px) {
     .icon-wrapper:hover .icon {
         transform: scale(1.1);
@@ -215,15 +146,14 @@ body {
     }
 }
 
-/* Mobile Optimizations */
+/* Mobile */
 @media (max-width: 768px) {
     body {
-        background-image: url('./images/new_background_mobile.JPEG');
+        background-image: url('./images/background_mobile.webp');
         background-size: cover;
         background-position: center;
         background-attachment: scroll;
         overflow: hidden;
-        /* Prevent scrolling while dragging */
     }
 
     .container {
@@ -240,19 +170,12 @@ body {
         padding-top: 70%;
         width: 100%;
         height: 100%;
-        /* Clear previous overrides */
-    }
-
-    .logo {
-        margin: 0;
-        max-width: 80%;
     }
 
     .icons-row {
         gap: 0;
         width: 100%;
         height: 320px;
-        /* Balanced height for carousel */
         position: relative;
         display: flex;
         justify-content: center;
@@ -267,8 +190,8 @@ body {
         height: 100px;
         position: relative;
         transform-style: preserve-3d;
-        transition: transform 0.1s ease-out;
-        /* Smooth drag */
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        will-change: transform;
     }
 
     .icon-wrapper {
@@ -281,17 +204,8 @@ body {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        /* Backface visibility helps performance, but we might want to see backs of cards? */
-        /* backface-visibility: hidden; */
     }
 
-    /* 
-     * Positioning the 3 items in a circle (triangle).
-     * 3 items -> 360 / 3 = 120deg apart.
-     * TranslateZ moves them out from center.
-     * r = width / (2 * tan(PI/n)) ~= 100 / tan(60) ~= 57px? 
-     * We want them spaced out more. Let's try 140px.
-     */
     .icon-wrapper:nth-child(1) {
         transform: rotateY(0deg) translateZ(120px);
     }
@@ -308,24 +222,29 @@ body {
         max-width: 150px;
         max-height: 150px;
         transition: transform var(--transition-smooth), filter var(--transition-smooth);
-        /* Dim items not in front? */
         filter: brightness(0.5) blur(1px);
     }
 
+    .icon-wrapper:nth-child(3) .icon {
+        max-width: 210px;
+        max-height: 210px;
+    }
+
     .icon-label {
-        margin-top: 1rem;
-        font-size: 1rem;
+        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        /* Increased from 1rem */
         opacity: 0;
         transform: translateY(10px);
         transition: all 0.3s ease;
         text-align: center;
         position: absolute;
-        bottom: -30px;
+        bottom: -60px;
+        /* Lowered to clear larger icon */
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         pointer-events: none;
     }
 
-    /* Active State (Front facing) */
     .icon-wrapper.active .icon {
         transform: scale(1.1);
         filter: brightness(1) blur(0) drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
