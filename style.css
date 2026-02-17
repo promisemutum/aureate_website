@@ -97,8 +97,8 @@ body {
 
 .icon-wrapper:nth-child(3) .icon {
     max-width: 250px;
-    transform: scale(1.2);
-    /* Enlarge visually without affecting layout */
+    transform: translateY(-20px) scale(1.2);
+    /* Lifted slightly and enlarged */
     transform-origin: center center;
 }
 
@@ -228,6 +228,8 @@ body {
     .icon-wrapper:nth-child(3) .icon {
         max-width: 210px;
         max-height: 210px;
+        transform: translateY(-10px) scale(1.1);
+        /* Lifted slightly on mobile */
     }
 
     .icon-label {
