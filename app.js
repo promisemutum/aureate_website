@@ -7,19 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     clickSound.preload = 'auto';
 
     let lastSoundTime = 0;
-    const SOUND_DEBOUNCE = 150; // ms
+    const SOUND_DEBOUNCE = 0; // ms
 
-    // Force unlock audio on first interaction
-    const unlockAudio = () => {
-        clickSound.play().then(() => {
-            clickSound.pause();
-            clickSound.currentTime = 0;
-        }).catch(() => { });
-        document.removeEventListener('click', unlockAudio);
-        document.removeEventListener('touchstart', unlockAudio);
-    };
-    document.addEventListener('click', unlockAudio);
-    document.addEventListener('touchstart', unlockAudio, { passive: true });
 
     const playClickSound = () => {
         const now = Date.now();
