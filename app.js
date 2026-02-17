@@ -7,24 +7,63 @@ document.addEventListener('DOMContentLoaded', () => {
     clickSound.preload = 'auto';
 
     let lastSoundTime = 0;
-    const SOUND_DEBOUNCE = 50; // Short debounce
+    const SOUND_DEBOUNCE = 300;
+    const TAP_THRESHOLD = 10; // Max movement to count as tap (px)
+
+    // Track touch position to distinguish taps from scrolls
+    const touchData = {
+        startX: 0,
+        startY: 0,
+        isScrolling: false
+    };
 
     const playClickSound = () => {
         const now = Date.now();
         if (now - lastSoundTime < SOUND_DEBOUNCE) return;
         lastSoundTime = now;
-        const sound = clickSound.cloneNode();
-        sound.play().catch(e => console.warn(e));
+
+        const sound = new Audio('./sound/click.wav');
+        sound.play().catch(e => {
+            console.warn("Audio play failed:", e);
+            if (e.name === 'NotAllowedError' && !window._soundUnlocked) {
+                document.body.addEventListener('click', () => {
+                    window._soundUnlocked = true;
+                    sound.play().catch(() => { });
+                }, { once: true });
+            }
+        });
     };
 
-    // Attach sound logic to icons using pointer events (Zero Delay)
+    // FIXED: Hybrid approach for touch/click differentiation
     iconWrappers.forEach(wrapper => {
         wrapper.addEventListener('pointerdown', (e) => {
-            // User requested preventDefault to avoid double-trigger fallback
-            // This also likely prevents mouse emulation events, so we must rely on pointer events elsewhere
-            e.preventDefault();
-            playClickSound();
-        }, { passive: false });
+            // Store initial touch position
+            touchData.startX = e.clientX;
+            touchData.startY = e.clientY;
+            touchData.isScrolling = false;
+
+            // Only play sound on pointerdown if we're sure it's a tap
+            // We'll confirm in pointerup
+        }, { passive: true }); // 👈 Critical: passive: true for scroll performance
+
+        wrapper.addEventListener('pointermove', (e) => {
+            // Calculate movement distance
+            const dx = Math.abs(e.clientX - touchData.startX);
+            const dy = Math.abs(e.clientY - touchData.startY);
+
+            // If movement exceeds threshold, mark as scroll
+            if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) {
+                touchData.isScrolling = true;
+            }
+        }, { passive: true });
+
+        wrapper.addEventListener('pointerup', (e) => {
+            // Play sound ONLY if it was a tap (not scroll)
+            if (!touchData.isScrolling) {
+                playClickSound();
+                e.preventDefault(); // Only prevent default for actual taps
+            }
+        });
     });
 
     let startX = 0;
@@ -51,16 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
         iconWrappers.forEach((wrapper, i) => {
             const isActive = i === activeIndex;
             wrapper.classList.toggle('active', isActive);
-            wrapper.style.pointerEvents = 'auto';
+
+            // 🔥 FIX: Only active icon should receive pointer events
+            wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
         });
     };
 
     updateActiveState(0);
 
-    // Interaction Handlers using Pointer Events (Unified)
     const handleStart = (e) => {
-        // Only main pointer (mouse or first touch)
-        if (!e.isPrimary) return;
+        // Only handle primary pointer and ignore if already processed by icon
+        if (!e.isPrimary || e.defaultPrevented) return;
 
         isDragging = true;
         startX = e.clientX;
@@ -71,9 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
             carousel.style.transition = 'none';
         }
 
-        // Capture pointer to track outside window
-        if (e.target.setPointerCapture) {
-            e.target.setPointerCapture(e.pointerId);
+        try {
+            if (e.target.setPointerCapture) {
+                e.target.setPointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            if (e.currentTarget.setPointerCapture) {
+                e.currentTarget.setPointerCapture(e.pointerId);
+            }
         }
     };
 
@@ -98,13 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        // We moved sound logic to 'pointerdown' on icon, so no sound logic needed here.
-        // But if we want to support click on non-icon parts or complex logic... 
-        // User asked for "no delay" which implies pointerdown.
-        // So drag logic just handles rotation.
-
-        if (e.target.releasePointerCapture) {
-            e.target.releasePointerCapture(e.pointerId);
+        try {
+            if (e.target.releasePointerCapture) {
+                e.target.releasePointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            // Ignore
         }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
@@ -119,18 +163,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scene = document.querySelector('.container');
     if (scene) {
-        // Use pointer events for drag as well
         scene.addEventListener('pointerdown', handleStart);
         scene.addEventListener('pointermove', handleMove);
         scene.addEventListener('pointerup', handleEnd);
         scene.addEventListener('pointercancel', handleEnd);
         scene.addEventListener('pointerleave', (e) => {
-            // If we rely on capture, we might not need leave, but safe fallback
-            if (isDragging && !scene.hasPointerCapture && !e.target.hasPointerCapture(e.pointerId)) {
+            if (isDragging) {
+                try {
+                    if (scene.releasePointerCapture) {
+                        scene.releasePointerCapture(e.pointerId);
+                    }
+                } catch (err) {
+                    // Ignore
+                }
                 handleEnd(e);
             }
         });
     }
 
     window.addEventListener('resize', () => updateActiveState(currentRotation));
+
+    // iOS sound unlock (keep this)
+    document.addEventListener('touchstart', () => {
+        if (!window._soundUnlocked) {
+            const unlockSound = new Audio();
+            unlockSound.play().then(() => unlockSound.remove());
+            window._soundUnlocked = true;
+        }
+    }, { once: true });
 });
