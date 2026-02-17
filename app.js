@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalDragDistance = 0;
 
     const STEP = 120;
-    const DRAG_SENSITIVITY = 0.5;
+    const DRAG_SENSITIVITY = 0.7;
 
     const normalizeAngle = (angle) => {
         let a = angle % 360;
