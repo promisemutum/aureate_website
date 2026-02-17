@@ -3,26 +3,39 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
+    // Keep preload but we'll use fresh instances for reliability
     const clickSound = new Audio('./sound/click.wav');
     clickSound.preload = 'auto';
 
     let lastSoundTime = 0;
-    const SOUND_DEBOUNCE = 50; // Short debounce
+    const SOUND_DEBOUNCE = 300; // 🔥 FIX: Increased from 50ms to 300ms (mobile standard)
 
     const playClickSound = () => {
         const now = Date.now();
         if (now - lastSoundTime < SOUND_DEBOUNCE) return;
         lastSoundTime = now;
-        const sound = clickSound.cloneNode();
-        sound.play().catch(e => console.warn(e));
+
+        // 🔥 FIX: Create FRESH audio instance (cloneNode causes issues on iOS)
+        const sound = new Audio('./sound/click.wav');
+        sound.play().catch(e => {
+            console.warn("Audio play failed:", e);
+
+            // 🔥 FIX: iOS autoplay fallback
+            if (e.name === 'NotAllowedError' && !window._soundUnlocked) {
+                document.body.addEventListener('click', () => {
+                    window._soundUnlocked = true;
+                    sound.play().catch(err => console.error("Fallback failed:", err));
+                }, { once: true });
+            }
+        });
     };
 
-    // Attach sound logic to icons using pointer events (Zero Delay)
+    // Attach sound logic to icons using pointer events
     iconWrappers.forEach(wrapper => {
         wrapper.addEventListener('pointerdown', (e) => {
-            // User requested preventDefault to avoid double-trigger fallback
-            // This also likely prevents mouse emulation events, so we must rely on pointer events elsewhere
             e.preventDefault();
+            // 🔥 FIX: CRITICAL - Stop event from bubbling to parent container
+            e.stopPropagation();
             playClickSound();
         }, { passive: false });
     });
@@ -57,8 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateActiveState(0);
 
-    // Interaction Handlers using Pointer Events (Unified)
+    // Interaction Handlers using Pointer Events
     const handleStart = (e) => {
+        // 🔥 FIX: Ignore if already handled by child (icon)
+        if (e.defaultPrevented) return;
+
         // Only main pointer (mouse or first touch)
         if (!e.isPrimary) return;
 
@@ -72,8 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Capture pointer to track outside window
-        if (e.target.setPointerCapture) {
-            e.target.setPointerCapture(e.pointerId);
+        try { // 🔥 FIX: Added try/catch for safer pointer capture
+            if (e.target.setPointerCapture) {
+                e.target.setPointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            if (e.currentTarget.setPointerCapture) {
+                e.currentTarget.setPointerCapture(e.pointerId);
+            }
         }
     };
 
@@ -98,13 +120,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        // We moved sound logic to 'pointerdown' on icon, so no sound logic needed here.
-        // But if we want to support click on non-icon parts or complex logic... 
-        // User asked for "no delay" which implies pointerdown.
-        // So drag logic just handles rotation.
-
-        if (e.target.releasePointerCapture) {
-            e.target.releasePointerCapture(e.pointerId);
+        // 🔥 FIX: Safe pointer release with try/catch
+        try {
+            if (e.target.releasePointerCapture) {
+                e.target.releasePointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            // Ignore errors
         }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
@@ -119,18 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scene = document.querySelector('.container');
     if (scene) {
-        // Use pointer events for drag as well
         scene.addEventListener('pointerdown', handleStart);
         scene.addEventListener('pointermove', handleMove);
         scene.addEventListener('pointerup', handleEnd);
         scene.addEventListener('pointercancel', handleEnd);
         scene.addEventListener('pointerleave', (e) => {
-            // If we rely on capture, we might not need leave, but safe fallback
-            if (isDragging && !scene.hasPointerCapture && !e.target.hasPointerCapture(e.pointerId)) {
+            if (isDragging) {
+                try { // 🔥 FIX: Safe pointer release in leave handler
+                    if (scene.releasePointerCapture) {
+                        scene.releasePointerCapture(e.pointerId);
+                    }
+                } catch (err) {
+                    // Ignore errors
+                }
                 handleEnd(e);
             }
         });
     }
 
     window.addEventListener('resize', () => updateActiveState(currentRotation));
+
+    // 🔥 FIX: iOS sound unlock mechanism
+    document.addEventListener('touchstart', () => {
+        if (!window._soundUnlocked) {
+            const unlockSound = new Audio();
+            unlockSound.play().then(() => unlockSound.remove());
+            window._soundUnlocked = true;
+        }
+    }, { once: true });
 });
