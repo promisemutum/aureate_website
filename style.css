@@ -92,6 +92,8 @@ body {
     cursor: pointer;
     touch-action: manipulation;
     /* Critical for mobile scroll */
+    -webkit-tap-highlight-color: transparent;
+    /* Removes black tap box on mobile */
 }
 
 .icon {
@@ -115,6 +117,15 @@ body {
 
 .icon-wrapper:nth-child(1).active .icon {
     transform: translateY(var(--icon-1-y)) scale(1.15);
+}
+
+/* Child 2 - Explicit hover/active states for consistency */
+.icon-wrapper:nth-child(2):hover .icon {
+    transform: scale(1.1);
+}
+
+.icon-wrapper:nth-child(2).active .icon {
+    transform: scale(1.15);
 }
 
 /* Child 3 - CRITICAL FIX: Proper transform combinations */
