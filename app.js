@@ -41,9 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
             touchData.startX = e.clientX;
             touchData.startY = e.clientY;
             touchData.isScrolling = false;
-
-            // Only play sound on pointerdown if we're sure it's a tap
-            // We'll confirm in pointerup
         }, { passive: true }); // 👈 Critical: passive: true for scroll performance
 
         wrapper.addEventListener('pointermove', (e) => {
@@ -61,7 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Play sound ONLY if it was a tap (not scroll)
             if (!touchData.isScrolling) {
                 playClickSound();
-                e.preventDefault(); // Only prevent default for actual taps
+                // preventDefault only on mobile to avoid double-tap zoom/etc
+                // On desktop, we want default click behavior
+                if (window.innerWidth <= MOBILE_BREAKPOINT) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // Also handle click for Desktop (since we might not preventDefault there)
+        wrapper.addEventListener('click', (e) => {
+            if (window.innerWidth > MOBILE_BREAKPOINT) {
+                playClickSound();
             }
         });
     });
@@ -82,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateActiveState = (rotation) => {
+        // Only run active state logic on mobile
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
         const norm = normalizeAngle(-rotation);
         let activeIndex = 0;
         if (norm > 60 && norm <= 180) activeIndex = 1;
@@ -91,14 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const isActive = i === activeIndex;
             wrapper.classList.toggle('active', isActive);
 
-            // 🔥 FIX: Only active icon should receive pointer events
+            // 🔥 FIX: Only active icon should receive pointer events (Mobile only)
             wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
         });
     };
 
-    updateActiveState(0);
+    // Initial state check
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        updateActiveState(0);
+    }
 
     const handleStart = (e) => {
+        // Desktop check: Abort if not mobile
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
         // Only handle primary pointer and ignore if already processed by icon
         if (!e.isPrimary || e.defaultPrevented) return;
 
@@ -123,6 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleMove = (e) => {
+        // Desktop check
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
         if (!isDragging || !e.isPrimary) return;
 
         const x = e.clientX;
@@ -140,6 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleEnd = (e) => {
+        // Desktop check
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
@@ -181,7 +204,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.addEventListener('resize', () => updateActiveState(currentRotation));
+    // Resize Handler with Cleanup
+    window.addEventListener('resize', () => {
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            // Re-enable mobile state
+            updateActiveState(currentRotation);
+        } else {
+            // Desktop: Cleanup
+            if (carousel) {
+                carousel.style.transform = '';
+                carousel.style.transition = '';
+            }
+            iconWrappers.forEach(wrapper => {
+                wrapper.classList.remove('active');
+                wrapper.style.pointerEvents = 'auto'; // Re-enable clicks
+            });
+            isDragging = false;
+        }
+    });
 
     // iOS sound unlock (keep this)
     document.addEventListener('touchstart', () => {
