@@ -58,11 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Play sound ONLY if it was a tap (not scroll)
             if (!touchData.isScrolling) {
                 playClickSound();
-                // preventDefault only on mobile to avoid double-tap zoom/etc
-                // On desktop, we want default click behavior
-                if (window.innerWidth <= MOBILE_BREAKPOINT) {
-                    e.preventDefault();
-                }
+                // Removed e.preventDefault() to allow <a> tags to function on mobile
             }
         });
 
