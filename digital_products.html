@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Products – Aureate Realm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            /* Dark fallback */
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .section {
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .ebook-section {
+            background-image: url('./images/ebook_pc.jpeg');
+        }
+
+        .wallpaper-section {
+            background-image: url('./images/wallpaper.jpeg');
+        }
+
+        /* Scroll Indicator Styling */
+        .scroll-indicator {
+            display: none;
+            /* Hidden on PC by default */
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            text-align: center;
+            text-decoration: none;
+        }
+
+
+        .scroll-indicator svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+            animation: bounce 2s infinite;
+            opacity: 0.6;
+            /* Slightly transparent */
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Switch to mobile background and stack vertical on narrow screens */
+        @media (max-width: 768px) {
+            .section {
+                background-attachment: scroll;
+            }
+
+            .ebook-section {
+                background-image: url('./images/ebook_mobile.jpeg');
+                position: relative;
+                /* Ensure absolute positioning works for indicator */
+            }
+
+            .scroll-indicator {
+                display: flex;
+                /* Show only on mobile */
+            }
+
+            /* Assuming wallpaper is the same for mobile, if different, add mobile class for wallpaper here */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="section ebook-section">
+        <div class="scroll-indicator" id="scrollIndicator" aria-label="Scroll down for free wallpaper" role="button"
+            tabindex="0">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+        </div>
+    </div>
+    <div class="section wallpaper-section" id="wallpaperSection"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            const wallpaperSection = document.getElementById('wallpaperSection');
+
+            if (scrollIndicator && wallpaperSection) {
+                // Handle Click/Tap
+                scrollIndicator.addEventListener('click', () => {
+                    wallpaperSection.scrollIntoView({ behavior: 'smooth' });
+                });
+
+                // Handle Keyboard Enter/Space for accessibility
+                scrollIndicator.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        wallpaperSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
