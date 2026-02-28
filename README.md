@@ -1,19 +1,15 @@
 # Aureate Realm
 
-A minimalist experience exploring the golden boundaries of design and digital products.
+A minimalist experience exploring the golden boundaries of design and digital products. 
 
-## Current Version: 1.1.0
+This space is a living experiment in aesthetics and interactive storytelling. 
 
-This project follows semantic versioning. 
+---
 
-### How to Revert to this Version
-If you need to revert to this specific major release in the future, you can use the following Git command:
+### Versatility
+Everything here is version controlled and tagged for history. 
 
-```bash
-git checkout v1.0.0
-```
+To explore previous iterations:
+`git tag`
 
-To see all available versions:
-```bash
-git tag
-```
+Current: v1.1.0

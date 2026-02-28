@@ -1,4 +1,12 @@
-node_modules/
-.DS_Store
-.env
-.idea/
+# Ignore unused raw image assets
+images/IMG_4770.PNG
+images/ebook/1.jpeg
+images/ebook/2.png
+images/ebook/3.png
+images/ebook/WhatsApp Image 2024-06-26 at 9.26.54 PM.jpeg
+images/ebook/cover.png
+images/ebook/cover_shadow.png
+images/ebook/text1.png
+images/ebook/text2.png
+images/landing/background_mobile.webp
+images/landing/background_pc.webp
