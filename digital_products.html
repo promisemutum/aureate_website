@@ -15,207 +15,84 @@
             box-sizing: border-box;
         }
 
-        html,
         body {
-            width: 100%;
-            height: 100%;
-        }
-
-        body {
-            background-color: #0b0b0b;
-            background-image: url('./images/ebook/1.JPEG');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            font-family: 'Inter', sans-serif;
+            margin: 0;
             overflow: hidden;
-            position: relative;
+            background-color: #0b0b0b;
+            font-family: 'Inter', sans-serif;
         }
 
-        .cutout-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        .hero-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            /* Pack to the right side of the screen */
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .section {
             height: 100%;
-            background-image: url('./images/ebook/3.PNG');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            z-index: 1;
-            pointer-events: none;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.15)) brightness(1.1) contrast(1.05);
-            animation: pulseCutout 4s infinite alternate;
+            flex-shrink: 0;
+            transform: scale(1.08);
+            filter: brightness(0.5);
+            animation: popIn 0.5s ease-out forwards;
         }
 
-        @keyframes pulseCutout {
-            0% {
-                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.1)) brightness(1.05) contrast(1.05);
-            }
-
-            100% {
-                filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.25)) brightness(1.15) contrast(1.1);
-            }
-        }
-
-        @keyframes pulseGlow {
-            0% {
-                filter: drop-shadow(0 0 50px rgba(255, 200, 0, 0.6));
-            }
-
-            100% {
-                filter: drop-shadow(0 0 70px rgba(255, 200, 0, 1));
-            }
-        }
-
-        .text-overlay {
-            position: fixed;
-            right: 17%;
-            width: 300px;
-            z-index: 15;
-            pointer-events: none;
-            opacity: 1;
-            mix-blend-mode: screen;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: opacity 0.3s ease;
-        }
-
-        .text-overlay.top {
-            top: 0;
-        }
-
-        .text-overlay.middle {
-            right: 20%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 200px;
-        }
-
-        .text-overlay.bottom {
-            right: 10%;
-            top: 64%;
-            width: 500px;
-        }
-
-        .book-cover {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 55%;
-            height: 100%;
-            background-image: url('./images/ebook/cover.jpeg');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.9;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .cover-curl-shadow {
-            position: fixed;
-            top: 0;
-            right: 3%;
-            width: 100%;
-            height: 100%;
-            background-image: url('./images/ebook/cover_shadow.jpeg');
-            background-size: cover;
-            background-position: center;
-            mix-blend-mode: multiply;
-            opacity: 0.8;
-            /* Adjust for shadow intensity */
-            z-index: 6;
-            /* Just above the cover */
-            pointer-events: none;
-        }
-
-        .product-icon {
-            position: absolute;
-            left: 8%;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        .section img {
             display: block;
+            height: 100%;
+            width: auto;
+            /* Proportional natural width to match 100% height */
         }
 
-        .product-icon img {
-            width: 500px;
-            height: auto;
-            object-fit: contain;
-            /* Animated vividly pronounced glowing light effect */
-            animation: pulseGlow 1s infinite alternate ease-in-out;
+        /* Section 1 slides in LAST */
+        .section-1 {
+            animation-delay: 0.3s;
         }
 
-        .product-icon:hover img {
-            /* Maximize vivid glow intensity on hover */
-            filter: drop-shadow(0 0 120px rgba(255, 200, 0, 1));
-            animation: none;
-            /* Pause pulse on hover */
+        /* Section 2 slides in SECOND */
+        .section-2 {
+            animation-delay: 0.15s;
         }
 
-        .product-icon:hover {
-            transform: translateY(-50%) scale(1.05);
+        /* Section 3 slides in FIRST */
+        .section-3 {
+            animation-delay: 0s;
         }
 
-        .product-icon:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        @media (max-width: 768px) {
-            body {
-                background-image: url('./images/init/init_ebook.jpeg');
-                background-attachment: scroll;
+        @keyframes popIn {
+            0% {
+                transform: scale(1.08);
+                filter: brightness(0.5);
             }
 
-            .product-icon {
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-            }
-
-            .product-icon:hover,
-            .product-icon:active {
-                transform: translate(-50%, -50%) scale(1.1);
-            }
-
-            .product-icon img {
-                width: 100px;
-            }
-
-            .text-overlay {
-                width: 150px;
-                right: 5%;
-            }
-
-            .text-overlay.top {
-                top: 2%;
-            }
-
-            .text-overlay.middle {
-                top: 30%;
-                transform: translateY(-50%);
-            }
-
-            .text-overlay.bottom {
-                top: 40%;
-                right: 5%;
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="cutout-overlay"></div>
-    <div class="book-cover"></div>
-    <div class="cover-curl-shadow"></div>
-    <img src="./images/ebook/text1.PNG" alt="Text 1" class="text-overlay top">
-    <img src="./images/ebook/text2.PNG" alt="Text 2" class="text-overlay middle">
-    <img src="./images/ebook/text3.PNG" alt="Text 3" class="text-overlay bottom">
-    <a href="#" class="product-icon" aria-label="Purchase Digital Product">
-        <img src="./images/ebook/2.PNG" alt="Digital Product Icon">
-    </a>
+    <div class="hero-container">
+        <!-- Flex items packed to the right side -->
+        <!-- Div order matters: 1 is left-most, 3 is right-most -->
+        <div class="section section-1">
+            <img src="./images/ebook/1.webp" alt="Section 1">
+        </div>
+
+        <div class="section section-2">
+            <img src="./images/ebook/2.webp" alt="Section 2">
+        </div>
+
+        <div class="section section-3">
+            <img src="./images/ebook/3.webp" alt="Section 3">
+        </div>
+    </div>
 </body>
 
 </html>
