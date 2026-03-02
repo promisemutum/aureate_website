@@ -1,4 +1,3 @@
---- digital_products.html (原始)
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +25,6 @@
         .hero-container {
             display: flex;
             flex-direction: row;
-            justify-content: flex-end;
-            /* Pack to the right side of the screen */
             align-items: center;
             width: 100vw;
             height: 100vh;
@@ -46,20 +43,16 @@
             display: block;
             height: 100%;
             width: auto;
-            /* Proportional natural width to match 100% height */
         }
 
-        /* Section 1 slides in LAST */
         .section-1 {
             animation-delay: 0.3s;
         }
 
-        /* Section 2 slides in SECOND */
         .section-2 {
             animation-delay: 0.15s;
         }
 
-        /* Section 3 slides in FIRST */
         .section-3 {
             animation-delay: 0s;
         }
@@ -76,120 +69,68 @@
             }
         }
 
-        /* === Animated Yellow Glow === */
-        @keyframes yellowGlow {
+        @keyframes subtleGlow {
 
             0%,
             100% {
-                filter: drop-shadow(0 0 10px rgba(255, 210, 50, 0.5)) drop-shadow(0 0 22px rgba(255, 175, 0, 0.3));
+                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.1)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.5));
             }
 
             50% {
-                filter: drop-shadow(0 0 22px rgba(255, 220, 60, 0.85)) drop-shadow(0 0 45px rgba(255, 160, 0, 0.55));
+                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.7)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.5));
             }
         }
 
-        .back-home-icon {
+        .download-btn {
             position: fixed;
             top: 50%;
-            left: 20%;
+            left: 16%;
             transform: translate(-50%, -50%);
             z-index: 100;
-            width: 25vw;
-            max-width: 160px;
-            min-width: 70px;
+            width: 50vw;
+            max-width: 350px;
+            min-width: 200px;
             aspect-ratio: 1 / 1;
-            opacity: 0;
-            animation:
-                fadeInIcon 0.6s ease-out forwards 0.4s,
-                yellowGlow 2.4s ease-in-out infinite 1.2s;
-            transition:
-                transform 0.22s cubic-bezier(0.25, 1, 0.5, 1),
-                filter 0.22s ease;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
             -webkit-tap-highlight-color: transparent;
+            transition: transform 0.2s ease, filter 0.3s ease;
+            animation: subtleGlow 3s ease-in-out infinite;
         }
 
-        /* Hover: lift up slightly + scale */
-        .back-home-icon:hover {
-            transform: translate(-50%, calc(-50% - 8px)) scale(1.16);
-            filter:
-                drop-shadow(0 0 28px rgba(255, 220, 60, 1)) drop-shadow(0 0 55px rgba(255, 160, 0, 0.7));
+        .download-btn:hover {
+            transform: translate(-50%, -50%) scale(0.98);
+            filter: brightness(1.2) drop-shadow(0 0 80px rgba(255, 184, 28, 1));
             animation-play-state: paused;
-            /* pause pulse on hover for clean glow */
         }
 
-        /* Press: push down + shrink slightly */
-        .back-home-icon:active {
-            transform: translate(-50%, calc(-50% + 4px)) scale(0.93);
-            filter:
-                drop-shadow(0 0 14px rgba(255, 200, 40, 0.9)) drop-shadow(0 0 30px rgba(255, 140, 0, 0.6));
-            transition-duration: 0.08s;
+        .download-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+            transition-duration: 0.05s;
         }
 
-        .back-home-icon img {
+        .download-btn img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             pointer-events: none;
         }
 
-        @keyframes fadeInIcon {
-            from {
-                opacity: 0;
-                transform: translate(-50%, calc(-50% + 20px));
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        /* Mobile */
         @media (max-width: 768px) {
-            .back-home-icon {
+            .download-btn {
                 left: 50%;
                 top: 85%;
-                width: 80px;
-                transform: translate(-50%, -50%);
-            }
-
-            .back-home-icon:hover {
-                transform: translate(-50%, calc(-50% - 6px)) scale(1.16);
-            }
-
-            .back-home-icon:active {
-                transform: translate(-50%, calc(-50% + 3px)) scale(0.93);
-            }
-
-            @keyframes fadeInIcon {
-                from {
-                    opacity: 0;
-                    transform: translate(-50%, calc(-50% + 14px));
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translate(-50%, -50%);
-                }
+                width: 110px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="back-home-icon" role="img" aria-label="Book icon">
-        <img src="./images/ebook/book.webp" alt="">
-    </div>
+    <a href="#" class="download-btn">
+        <img src="./images/ebook/book.webp" alt="Download">
+    </a>
 
     <div class="hero-container">
-        <!-- Flex items packed to the right side -->
-        <!-- Div order matters: 1 is left-most, 3 is right-most -->
         <div class="section section-1">
             <img src="./images/ebook/1.webp" alt="Section 1">
         </div>
@@ -202,220 +143,27 @@
             <img src="./images/ebook/3.webp" alt="Section 3">
         </div>
     </div>
-</body>
 
-</html>
+    <audio id="click-sound" src="sound/click.wav" preload="auto"></audio>
 
-+++ digital_products.html (修改后)
-<!DOCTYPE html>
-<html lang="en">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.querySelector('.download-btn');
+            const sound = document.getElementById('click-sound');
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Products – Aureate Realm</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+            if (btn && sound) {
+                const playSound = (e) => {
+                    // Reset and play
+                    sound.currentTime = 0;
+                    sound.play().catch(err => console.log('Audio play failed:', err));
+                };
 
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #0b0b0b;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .hero-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            /* Pack to the right side of the screen */
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .section {
-            height: 100%;
-            flex-shrink: 0;
-            transform: scale(1.08);
-            filter: brightness(0.5);
-            animation: popIn 0.5s ease-out forwards;
-        }
-
-        .section img {
-            display: block;
-            height: 100%;
-            width: auto;
-            /* Proportional natural width to match 100% height */
-        }
-
-        /* Section 1 slides in LAST */
-        .section-1 {
-            animation-delay: 0.3s;
-        }
-
-        /* Section 2 slides in SECOND */
-        .section-2 {
-            animation-delay: 0.15s;
-        }
-
-        /* Section 3 slides in FIRST */
-        .section-3 {
-            animation-delay: 0s;
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(1.08);
-                filter: brightness(0.5);
+                btn.addEventListener('click', playSound);
+                // Also trigger for touch devices for faster response
+                btn.addEventListener('touchstart', playSound, { passive: true });
             }
-
-            100% {
-                transform: scale(1);
-                filter: brightness(1);
-            }
-        }
-
-        /* === Animated Yellow Glow === */
-        @keyframes yellowGlow {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 10px rgba(255, 210, 50, 0.5)) drop-shadow(0 0 22px rgba(255, 175, 0, 0.3));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 22px rgba(255, 220, 60, 0.85)) drop-shadow(0 0 45px rgba(255, 160, 0, 0.55));
-            }
-        }
-
-        .back-home-icon {
-            position: fixed;
-            top: 50%;
-            left: 20%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            width: 25vw;
-            max-width: 160px;
-            min-width: 70px;
-            aspect-ratio: 1 / 1;
-            opacity: 0;
-            animation:
-                fadeInIcon 0.6s ease-out forwards 0.4s;
-            transition:
-                transform 0.22s cubic-bezier(0.25, 1, 0.5, 1),
-                filter 0.22s ease;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .back-home-icon.instant-glow {
-            animation:
-                fadeInIcon 0.6s ease-out forwards 0.4s,
-                yellowGlow 2.4s ease-in-out infinite 0s;
-            opacity: 1;
-        }
-
-        /* Hover: lift up slightly + scale */
-        .back-home-icon:hover {
-            transform: translate(-50%, calc(-50% - 8px)) scale(1.16);
-            filter:
-                drop-shadow(0 0 28px rgba(255, 220, 60, 1)) drop-shadow(0 0 55px rgba(255, 160, 0, 0.7));
-            animation-play-state: paused;
-            /* pause pulse on hover for clean glow */
-        }
-
-        /* Press: push down + shrink slightly */
-        .back-home-icon:active {
-            transform: translate(-50%, calc(-50% + 4px)) scale(0.93);
-            filter:
-                drop-shadow(0 0 14px rgba(255, 200, 40, 0.9)) drop-shadow(0 0 30px rgba(255, 140, 0, 0.6));
-            transition-duration: 0.08s;
-        }
-
-        .back-home-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            pointer-events: none;
-        }
-
-        @keyframes fadeInIcon {
-            from {
-                opacity: 0;
-                transform: translate(-50%, calc(-50% + 20px));
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            .back-home-icon {
-                left: 50%;
-                top: 85%;
-                width: 80px;
-                transform: translate(-50%, -50%);
-            }
-
-            .back-home-icon:hover {
-                transform: translate(-50%, calc(-50% - 6px)) scale(1.16);
-            }
-
-            .back-home-icon:active {
-                transform: translate(-50%, calc(-50% + 3px)) scale(0.93);
-            }
-
-            @keyframes fadeInIcon {
-                from {
-                    opacity: 0;
-                    transform: translate(-50%, calc(-50% + 14px));
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translate(-50%, -50%);
-                }
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="back-home-icon instant-glow" role="img" aria-label="Book icon">
-        <img src="./images/ebook/book.webp" alt="">
-    </div>
-
-    <div class="hero-container">
-        <!-- Flex items packed to the right side -->
-        <!-- Div order matters: 1 is left-most, 3 is right-most -->
-        <div class="section section-1">
-            <img src="./images/ebook/1.webp" alt="Section 1">
-        </div>
-
-        <div class="section section-2">
-            <img src="./images/ebook/2.webp" alt="Section 2">
-        </div>
-
-        <div class="section section-3">
-            <img src="./images/ebook/3.webp" alt="Section 3">
-        </div>
-    </div>
+        });
+    </script>
 </body>
 
 </html>
