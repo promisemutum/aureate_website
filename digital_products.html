@@ -69,18 +69,6 @@
             }
         }
 
-        @keyframes subtleGlow {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.1)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.5));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.7)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.5));
-            }
-        }
-
         .download-btn {
             position: fixed;
             top: 50%;
@@ -94,13 +82,11 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             transition: transform 0.2s ease, filter 0.3s ease;
-            animation: subtleGlow 3s ease-in-out infinite;
         }
 
         .download-btn:hover {
             transform: translate(-50%, -50%) scale(0.98);
-            filter: brightness(1.2) drop-shadow(0 0 80px rgba(255, 184, 28, 1));
-            animation-play-state: paused;
+            filter: brightness(1.2);
         }
 
         .download-btn:active {
