@@ -16,77 +16,175 @@
         }
 
         body {
-            margin: 0;
             overflow: hidden;
             background-color: #0b0b0b;
             font-family: 'Inter', sans-serif;
         }
 
         .hero-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
+            position: relative;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
         }
 
         .section {
+            position: absolute;
+            top: 0;
             height: 100%;
-            flex-shrink: 0;
-            transform: scale(1.08);
-            filter: brightness(0.5);
+            overflow: hidden;
+            --target-opacity: 1;
             animation: popIn 0.5s ease-out forwards;
         }
 
         .section img {
             display: block;
+            width: 100%;
             height: 100%;
-            width: auto;
+            object-fit: cover;
         }
 
         .section-1 {
-            animation-delay: 0.3s;
+            left: 0;
+            width: 80vw;
+            z-index: 1;
+        }
+
+        .section-1 img {
+            object-fit: contain;
+            object-position: left center;
+            width: auto;
+            max-width: none;
         }
 
         .section-2 {
-            animation-delay: 0.15s;
+            right: 25vw;
+            width: 35vw;
+            z-index: 2;
+            --target-opacity: 0.93;
         }
 
         .section-3 {
-            animation-delay: 0s;
+            right: 0;
+            width: 25vw;
+            z-index: 3;
+            --target-opacity: 0.93;
+        }
+
+        .section-2::before,
+        .section-3::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+            pointer-events: none;
+            z-index: 4;
         }
 
         @keyframes popIn {
-            0% {
+            from {
                 transform: scale(1.08);
                 filter: brightness(0.5);
+                opacity: 0;
             }
 
-            100% {
+            to {
                 transform: scale(1);
                 filter: brightness(1);
+                opacity: var(--target-opacity);
             }
+        }
+
+        @keyframes fadeInText {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes fadeInText1 {
+            from {
+                opacity: 0;
+                transform: translateY(-40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(-50%);
+            }
+        }
+
+        .text-1,
+        .text-2,
+        .text-3 {
+            position: absolute;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+        }
+
+        .text-1 img,
+        .text-2 img,
+        .text-3 img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .text-1 {
+            right: 10vw;
+            width: 40vw;
+            top: 20%;
+            transform: translateY(-50%);
+            animation: fadeInText1 1s ease-out 0.3s forwards;
+        }
+
+        .text-2 {
+            left: 50%;
+            width: 80%;
+            top: 55%;
+            transform: translate(-50%, -50%);
+            animation: fadeInText 1s ease-out 0.6s forwards;
+        }
+
+        .text-3 {
+            left: 50%;
+            width: 55%;
+            top: 75%;
+            transform: translate(-50%, -50%);
+            animation: fadeInText 1s ease-out 0.6s forwards;
         }
 
         .download-btn {
             position: fixed;
             top: 50%;
-            left: 16%;
+            left: 18%;
             transform: translate(-50%, -50%);
             z-index: 100;
             width: 50vw;
             max-width: 350px;
             min-width: 200px;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 0.8 / 1;
+            padding: 2vw;
+            box-shadow: 0 40px 100px 20px rgba(0, 0, 0, 0.6);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.2s ease, filter 0.3s ease;
+            transition: transform 0.2s ease, filter 0.3s ease, box-shadow 0.3s ease;
         }
 
         .download-btn:hover {
             transform: translate(-50%, -50%) scale(0.98);
             filter: brightness(1.2);
+            box-shadow: 0 20px 60px 10px rgba(0, 0, 0, 0.8);
         }
 
         .download-btn:active {
@@ -107,6 +205,19 @@
                 top: 85%;
                 width: 110px;
             }
+
+            .section-1 {
+                width: 40vw;
+            }
+
+            .section-2 {
+                right: 25vw;
+                width: 40vw;
+            }
+
+            .section-3 {
+                width: 25vw;
+            }
         }
     </style>
 </head>
@@ -118,15 +229,25 @@
 
     <div class="hero-container">
         <div class="section section-1">
-            <img src="./images/ebook/1.webp" alt="Section 1">
+            <img src="./images/ebook/last.png" alt="Section 1">
         </div>
 
         <div class="section section-2">
-            <img src="./images/ebook/2.webp" alt="Section 2">
+            <img src="./images/ebook/new_cover_crop.jpeg" alt="Section 2">
+            <div class="text-2">
+                <img src="./images/ebook/text2.webp" alt="Text 2 Subtitle">
+            </div>
+            <div class="text-3">
+                <img src="./images/ebook/text3.webp" alt="Text 3 Label">
+            </div>
         </div>
 
         <div class="section section-3">
-            <img src="./images/ebook/3.webp" alt="Section 3">
+            <img src="./images/ebook/new_cover_crop.jpeg" alt="Section 3">
+        </div>
+
+        <div class="text-1">
+            <img src="./images/ebook/text1.webp" alt="Text 1 Title">
         </div>
     </div>
 
@@ -136,16 +257,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.download-btn');
             const sound = document.getElementById('click-sound');
-
             if (btn && sound) {
-                const playSound = (e) => {
-                    // Reset and play
+                const playSound = () => {
                     sound.currentTime = 0;
-                    sound.play().catch(err => console.log('Audio play failed:', err));
+                    sound.play().catch(() => { });
                 };
-
                 btn.addEventListener('click', playSound);
-                // Also trigger for touch devices for faster response
                 btn.addEventListener('touchstart', playSound, { passive: true });
             }
         });
