@@ -8,6 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="./images/ebook/cover_shadow.jpg" as="image">
+    <link rel="preload" href="./images/ebook/last.png" as="image">
+    <link rel="preload" href="./images/ebook/new_cover_crop.jpeg" as="image">
+    <link rel="preload" href="./images/ebook/text1.webp" as="image">
+    <link rel="preload" href="./images/ebook/text2.webp" as="image">
+    <link rel="preload" href="./images/ebook/text3.webp" as="image">
+    <link rel="preload" href="./images/ebook/book.webp" as="image">
     <style>
         * {
             margin: 0;
@@ -168,7 +175,8 @@
             position: absolute;
             z-index: 10;
             pointer-events: none;
-            opacity: 1;
+            opacity: 0;
+            /* Hidden initially to prevent blinking */
             mix-blend-mode: multiply;
             left: 15%;
             width: 100%;
@@ -178,6 +186,8 @@
             transform: translateX(-50%);
             /* Only horizontal centering */
             animation: fadeInShadow 1s ease-out 0.6s forwards;
+            will-change: opacity;
+            /* Optimizes for smoother animation */
         }
 
         .shadow-overlay img {
