@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUREATEREALM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0ede8;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: #e8e4dd;
+            border-bottom: 1px solid #d0cdc6;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-dots {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+        }
+
+        .menu-dots span {
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .logo-box {
+            width: 48px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .top-bar-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .products-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #555;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .globe-icon {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #888;
+            border-radius: 50%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .globe-icon::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            border-left: 1.5px solid #888;
+            border-right: 1.5px solid #888;
+            border-radius: 50%;
+        }
+
+        .globe-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 1px;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 1px;
+            background: #888;
+        }
+
+        /* Hero */
+        .hero {
+            background: #1a1a1a;
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: rgb(255, 157, 0);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: #e8e4dd;
+            letter-spacing: 4px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* Middle */
+        .middle-section {
+            background: linear-gradient(135deg, #d8d0c8, #e8ddd5, #ddd5cc);
+            padding: 50px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .reel-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-thumb {
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: width 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), margin 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s linear 0.1s;
+        }
+
+        .video-thumb:hover .thumb-image {
+            transform: scale(1.02);
+        }
+
+        .thumb-image {
+            transition: transform 0.3s ease;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+        }
+
+        .thumb-image img {
+            width: 100%;
+            display: block;
+        }
+
+        .thumb-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.6));
+            border-radius: 4px;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-icon::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 5px 0 5px 9px;
+            border-color: transparent transparent transparent #fff;
+            margin-left: 2px;
+        }
+
+        .thumb-title {
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            font-weight: 700;
+            font-size: 22px;
+            color: #e8a838;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        .thumb-views {
+            position: absolute;
+            bottom: 12px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* Initial State: Right is bigger & on top */
+        .secondary-thumb {
+            width: 250px;
+            z-index: 1;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .main-thumb {
+            width: 280px;
+            z-index: 2;
+            margin-left: -50px;
+            margin-right: 0;
+        }
+
+        /* Swapped State: Left is bigger & on top */
+        .reel-container.active .secondary-thumb {
+            width: 280px;
+            z-index: 2;
+            margin-right: -50px;
+            transition-delay: 0s;
+        }
+
+        .reel-container.active .main-thumb {
+            width: 250px;
+            z-index: 1;
+            margin-left: 0;
+            transition-delay: 0s;
+        }
+
+        .pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            margin-left: 120px;
+            pointer-events: none;
+            /* Prevent clicking dots if overlapping */
+        }
+
+        .pagination-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #bbb;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .pagination-dots span.active {
+            background: #888;
+        }
+
+        .about-reel-card {
+            width: 320px;
+            height: 260px;
+            background: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 6px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: #e0e0e0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Bottom */
+        .bottom-section {
+            background: linear-gradient(180deg, #e0e8e4, #e8eee8);
+            padding: 40px 30px;
+            text-align: center;
+            border-top: 1px solid #d0d8d4;
+            border-bottom: 1px solid #d0d8d4;
+            margin: 0 10px;
+            border-radius: 4px;
+        }
+
+        .bottom-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            color: #c43838;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        .bottom-description {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 72px;
+            color: #c43838;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 28px;
+                letter-spacing: 3px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+                letter-spacing: 2px;
+            }
+
+            .middle-section {
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 15px;
+            }
+
+            .secondary-thumb {
+                width: 210px;
+            }
+
+            .main-thumb {
+                width: 240px;
+                margin-left: -40px;
+            }
+
+            .reel-container.active .secondary-thumb {
+                width: 240px;
+                margin-right: -40px;
+            }
+
+            .reel-container.active .main-thumb {
+                width: 210px;
+                margin-left: 0;
+            }
+
+            .about-reel-card {
+                width: 280px;
+                height: 220px;
+            }
+
+            .bottom-description {
+                font-size: 48px;
+                letter-spacing: 4px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div class="menu-dots"><span></span><span></span><span></span></div>
+            <div class="logo-box">
+                <img src="images/icon.PNG" alt="Aureate Realm Logo">
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <div class="nav-links">
+                <a href="#about">ABOUT</a>
+                <a href="#contact">CONTACT</a>
+            </div>
+            <div class="products-link">
+                <span class="globe-icon"></span>
+                <span>PRODUCTS</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <img class="hero-image" src="https://images.unsplash.com/photo-1467991521834-fb8e202c7074?w=1200&h=600&fit=crop"
+            alt="Vintage CRT television on road">
+        <div class="hero-content">
+            <h1 class="hero-title">AUREATEREALM</h1>
+            <p class="hero-subtitle">START YOUR JOURNEY</p>
+        </div>
+    </section>
+
+    <!-- Middle Section -->
+    <section class="middle-section">
+        <div>
+            <div class="reel-container" id="reelContainer">
+                <div class="video-thumb secondary-thumb">
+                    <div class="thumb-image">
+                        <img src="https://images.unsplash.com/photo-1482539259217-f31001045448?w=400&h=300&fit=crop"
+                            alt="Red neon signage on glass wall">
+                        <div class="thumb-overlay"></div>
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-thumb main-thumb">
+                    <div class="thumb-image">
+                        <img src="https://images.unsplash.com/photo-1588363735885-5d784368d0d0?w=400&h=300&fit=crop"
+                            alt="White and red food truck on road during night time">
+                        <div class="thumb-overlay"></div>
+                        <div class="play-icon"></div>
+                        <div class="thumb-views">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            55.9K
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination-dots">
+                <span class="active"></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div class="about-reel-card">
+            <div class="card-title">ABOUT REEL</div>
+        </div>
+    </section>
+
+    <!-- Bottom Section -->
+    <section class="bottom-section">
+        <h2 class="bottom-title">ABOUT AUREATEREALM</h2>
+        <p class="bottom-description">DESCRIPTION</p>
+    </section>
+
+    <script>
+        const reelContainer = document.getElementById('reelContainer');
+        const dots = document.querySelectorAll('.pagination-dots span');
+
+        // Click to swap thumbnails
+        reelContainer.addEventListener('click', (e) => {
+            // Prevent dot clicks from triggering swap if they overlap
+            if (e.target.closest('.pagination-dots')) return;
+            reelContainer.classList.toggle('active');
+        });
+
+        // Pagination dots interaction
+        dots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent bubbling to container
+                dots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
