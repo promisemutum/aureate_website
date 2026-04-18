@@ -126,15 +126,17 @@
 
         /* Hero */
         .hero {
-            background: #1a1a1a;
-            padding: 40px 0;
-            text-align: center;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            min-height: 250px;
+            max-height: 70vh;
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 400px;
+            background: #1a1a1a;
         }
 
         .hero-title {
@@ -163,7 +165,7 @@
             width: 100%;
             max-width: 900px;
             padding: 0 20px;
-            height: 320px;
+            height: 80%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -182,12 +184,19 @@
         /* Middle */
         .middle-section {
             background: linear-gradient(135deg, #d8d0c8, #e8ddd5, #ddd5cc);
-            padding: 50px 30px;
+            padding: 60px 40px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             gap: 40px;
             flex-wrap: wrap;
+            overflow: visible;
+        }
+
+        .reel-wrapper {
+            padding: 0 60px;
+            /* Accommodate the negative margin overlap */
+            box-sizing: border-box;
         }
 
         .reel-container {
@@ -310,9 +319,7 @@
             justify-content: center;
             gap: 8px;
             margin-top: 20px;
-            margin-left: 120px;
             pointer-events: none;
-            /* Prevent clicking dots if overlapping */
         }
 
         .pagination-dots span {
@@ -339,6 +346,7 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: flex-start;
+            flex-shrink: 1;
         }
 
         .card-title {
@@ -394,29 +402,35 @@
                 flex-direction: column;
                 align-items: center;
                 padding: 30px 15px;
+                gap: 30px;
+            }
+
+            .reel-wrapper {
+                padding: 0 20px;
             }
 
             .secondary-thumb {
-                width: 210px;
+                width: 180px;
             }
 
             .main-thumb {
-                width: 240px;
+                width: 210px;
                 margin-left: -40px;
             }
 
             .reel-container.active .secondary-thumb {
-                width: 240px;
+                width: 210px;
                 margin-right: -40px;
             }
 
             .reel-container.active .main-thumb {
-                width: 210px;
+                width: 180px;
                 margin-left: 0;
             }
 
             .about-reel-card {
-                width: 280px;
+                width: 100%;
+                max-width: 320px;
                 height: 220px;
             }
 
@@ -465,7 +479,7 @@
 
     <!-- Middle Section -->
     <section class="middle-section">
-        <div>
+        <div class="reel-wrapper">
             <div class="reel-container" id="reelContainer">
                 <div class="video-thumb secondary-thumb">
                     <div class="thumb-image">
@@ -515,7 +529,6 @@
 
         // Click to swap thumbnails
         reelContainer.addEventListener('click', (e) => {
-            // Prevent dot clicks from triggering swap if they overlap
             if (e.target.closest('.pagination-dots')) return;
             reelContainer.classList.toggle('active');
         });
@@ -523,7 +536,7 @@
         // Pagination dots interaction
         dots.forEach(dot => {
             dot.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent bubbling to container
+                e.stopPropagation();
                 dots.forEach(d => d.classList.remove('active'));
                 dot.classList.add('active');
             });
