@@ -284,34 +284,21 @@
             font-weight: 500;
         }
 
-        /* Initial State: Right is bigger & on top */
-        .secondary-thumb {
+        /* Initial State: All thumbs */
+        .video-thumb {
             width: 250px;
             z-index: 1;
-            margin-left: 0;
-            margin-right: 0;
         }
 
-        .main-thumb {
-            width: 280px;
-            z-index: 2;
+        /* Create overlap for every thumb after the first */
+        .video-thumb ~ .video-thumb {
             margin-left: -50px;
-            margin-right: 0;
         }
 
-        /* Swapped State: Left is bigger & on top */
-        .reel-container.active .secondary-thumb {
+        /* Active State: Enlarge and bring to front */
+        .video-thumb.active {
             width: 280px;
             z-index: 2;
-            margin-right: -50px;
-            transition-delay: 0s;
-        }
-
-        .reel-container.active .main-thumb {
-            width: 250px;
-            z-index: 1;
-            margin-left: 0;
-            transition-delay: 0s;
         }
 
         .pagination-dots {
@@ -409,23 +396,16 @@
                 padding: 0 20px;
             }
 
-            .secondary-thumb {
+            .video-thumb {
                 width: 180px;
             }
 
-            .main-thumb {
-                width: 210px;
+            .video-thumb ~ .video-thumb {
                 margin-left: -40px;
             }
 
-            .reel-container.active .secondary-thumb {
+            .video-thumb.active {
                 width: 210px;
-                margin-right: -40px;
-            }
-
-            .reel-container.active .main-thumb {
-                width: 180px;
-                margin-left: 0;
             }
 
             .about-reel-card {
@@ -481,7 +461,7 @@
     <section class="middle-section">
         <div class="reel-wrapper">
             <div class="reel-container" id="reelContainer">
-                <div class="video-thumb secondary-thumb">
+                <div class="video-thumb">
                     <div class="thumb-image">
                         <img src="https://images.unsplash.com/photo-1482539259217-f31001045448?w=400&h=300&fit=crop"
                             alt="Red neon signage on glass wall">
@@ -489,7 +469,7 @@
                         <div class="play-icon"></div>
                     </div>
                 </div>
-                <div class="video-thumb main-thumb">
+                <div class="video-thumb active">
                     <div class="thumb-image">
                         <img src="https://images.unsplash.com/photo-1588363735885-5d784368d0d0?w=400&h=300&fit=crop"
                             alt="White and red food truck on road during night time">
@@ -502,6 +482,13 @@
                             </svg>
                             55.9K
                         </div>
+                    </div>
+                </div>
+                <div class="video-thumb">
+                    <div class="thumb-image">
+                        <img src="images/example/example_pc.jpeg" alt="Example display pc" style="object-fit: cover;">
+                        <div class="thumb-overlay"></div>
+                        <div class="play-icon"></div>
                     </div>
                 </div>
             </div>
@@ -525,23 +512,61 @@
 
     <script>
         const reelContainer = document.getElementById('reelContainer');
+        const thumbs = Array.from(reelContainer.querySelectorAll('.video-thumb'));
         const dots = document.querySelectorAll('.pagination-dots span');
 
-        // Click to swap thumbnails
+        function setActiveItem(index) {
+            thumbs.forEach(t => t.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            thumbs[index].classList.add('active');
+            if (dots[index]) dots[index].classList.add('active');
+        }
+
+        function cycleReel(direction = 1) {
+            const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
+            let nextIndex = (activeIndex + direction) % thumbs.length;
+            if (nextIndex < 0) nextIndex = thumbs.length - 1;
+            setActiveItem(nextIndex);
+        }
+
+        // Clean & Reusable: Clicking the container cycles the active thumb
         reelContainer.addEventListener('click', (e) => {
             if (e.target.closest('.pagination-dots')) return;
-            reelContainer.classList.toggle('active');
+            cycleReel(1);
         });
 
+        // Mobile Swipe Support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        reelContainer.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        reelContainer.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 40; // minimum distance to be considered a swipe
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped Left -> Next
+                cycleReel(1);
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped Right -> Previous
+                cycleReel(-1);
+            }
+        }
+
         // Pagination dots interaction
-        dots.forEach(dot => {
+        dots.forEach((dot, idx) => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation();
-                dots.forEach(d => d.classList.remove('active'));
-                dot.classList.add('active');
+                setActiveItem(idx);
             });
         });
-    </script>
-</body>
+    </script></body>
 
 </html>
