@@ -292,7 +292,7 @@
         }
 
         /* Create overlap for every thumb after the first */
-        .video-thumb ~ .video-thumb {
+        .video-thumb~.video-thumb {
             margin-left: -50px;
         }
 
@@ -325,24 +325,62 @@
 
         .about-reel-card {
             width: 320px;
-            height: 260px;
+            height: 480px;
             background: #3a3a3a;
             border: 1px solid #555;
             border-radius: 6px;
-            padding: 20px;
+            padding: 30px;
             position: relative;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             display: flex;
+            flex-direction: column;
             align-items: flex-start;
-            flex-shrink: 1;
+            gap: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .reel-info-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #e8a838 transparent;
+        }
+
+        .reel-info-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .reel-info-content::-webkit-scrollbar-thumb {
+            background: #e8a838;
+            border-radius: 10px;
         }
 
         .card-title {
-            font-size: 20px;
-            color: #e0e0e0;
+            font-size: 14px;
+            color: #888;
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 500;
+        }
+
+        .reel-info-title {
+            font-size: 24px;
+            color: #e8a838;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .reel-info-text {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+            margin-top: 10px;
         }
 
         /* Bottom */
@@ -401,7 +439,7 @@
                 width: 140px;
             }
 
-            .video-thumb ~ .video-thumb {
+            .video-thumb~.video-thumb {
                 margin-left: -55px;
             }
 
@@ -502,6 +540,12 @@
 
         <div class="about-reel-card">
             <div class="card-title">ABOUT REEL</div>
+            <div class="reel-info-content">
+                <h3 class="reel-info-title" id="reelInfoTitle">THE ART OF KEEP GOING</h3>
+                <p class="reel-info-text" id="reelInfoText">
+                    Loading description...
+                </p>
+            </div>
         </div>
     </section>
 
@@ -515,14 +559,43 @@
         const reelContainer = document.getElementById('reelContainer');
         const thumbs = Array.from(reelContainer.querySelectorAll('.video-thumb'));
         const dots = document.querySelectorAll('.pagination-dots span');
+        const infoTitle = document.getElementById('reelInfoTitle');
+        const infoText = document.getElementById('reelInfoText');
+
+        const descriptions = [
+            {
+                title: "THE ART OF KEEP GOING",
+                text: "The reel \"The Art of Keep Going\" by Aureate Realm is designed as a cinematic manifesto for the modern striver. Its primary motive is to bridge the gap between initial ambition and long-term achievement by reframing the \"middle\" of any journey—often the most difficult and unrewarding part—as a period of high-level craftsmanship. Rather than focusing on the euphoria of a win, the reel aims to validate the silent, repetitive work that occurs when the spotlight is off and the applause has died down.\n\nUltimately, the reel is intended to be a source of \"steady-state\" inspiration. Unlike high-energy content meant to give you a temporary adrenaline spike, \"The Art of Keep Going\" is meant to provide a lasting mental framework. Its motive is to leave the viewer with a sense of calm resolve, encouraging them to return to their work with the understanding that the act of simply not stopping is, in itself, a form of mastery and a \"realm\" of success few ever reach."
+            },
+            {
+                title: "BURDEN OF DREAMS",
+                text: "This reel serves as a visceral intersection between the polished philosophy of the Aureate Realm and the harrowing reality of Les Blank’s \"Burden of Dreams.\"\n\nThe motive behind this reel is to challenge the viewer’s definition of \"persistence.\" While the Aureate Realm teaches us the beauty of showing up when the excitement has faded, Burden of Dreams shows what happens when that consistency is tested by plane crashes, illness, and the unforgiving laws of nature. It asks a profound question: Where does the noble pursuit of a dream end, and the \"burden\" of obsession begin? By framing Herzog’s struggle to haul a 320-ton steamship over a mountain as the ultimate \"Aureate\" ritual, the reel elevates the concept of \"keeping going\" from a lifestyle habit to a monumental battle of human will against the universe."
+            }
+        ];
 
         function setActiveItem(index) {
             thumbs.forEach(t => t.classList.remove('active'));
             dots.forEach(d => d.classList.remove('active'));
-            
+
             thumbs[index].classList.add('active');
             if (dots[index]) dots[index].classList.add('active');
+
+            // Update the description card
+            if (descriptions[index]) {
+                infoTitle.textContent = descriptions[index].title;
+                infoText.textContent = descriptions[index].text;
+                document.querySelector('.about-reel-card').style.opacity = "1";
+            } else {
+                infoTitle.textContent = "AUREATE REALM";
+                infoText.textContent = "Description";
+            }
+
+            // Reset scroll position when content changes
+            document.querySelector('.reel-info-content').scrollTop = 0;
         }
+
+        // Initialize with first item
+        setActiveItem(0);
 
         function cycleReel(direction = 1) {
             const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
@@ -568,6 +641,7 @@
                 setActiveItem(idx);
             });
         });
-    </script></body>
+    </script>
+</body>
 
 </html>
