@@ -407,7 +407,8 @@
         .video-container {
             position: relative;
             width: 90%;
-            max-width: 500px; /* Usually portrait for reels */
+            max-width: 500px;
+            /* Usually portrait for reels */
             max-height: 90vh;
         }
 
@@ -416,7 +417,7 @@
             max-height: 90vh;
             border-radius: 8px;
             outline: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             background: #000;
         }
 
@@ -559,6 +560,13 @@
                             alt="Red neon signage on glass wall">
                         <div class="thumb-overlay"></div>
                         <div class="play-icon"></div>
+                        <div class="thumb-views">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            260K
+                        </div>
                     </div>
                 </div>
                 <div class="video-thumb active">
@@ -572,7 +580,7 @@
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
-                            55.9K
+                            67K
                         </div>
                     </div>
                 </div>
@@ -581,6 +589,13 @@
                         <img src="images/example/example_pc.jpeg" alt="Example display pc" style="object-fit: cover;">
                         <div class="thumb-overlay"></div>
                         <div class="play-icon"></div>
+                        <div class="thumb-views">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            10K
+                        </div>
                     </div>
                 </div>
             </div>
@@ -673,7 +688,7 @@
             "media/reel2.MP4",
             "media/reel3.MP4"
         ];
-        
+
         const videoModal = document.getElementById('videoModal');
         const modalVideo = document.getElementById('modalVideo');
         const closeModal = document.querySelector('.close-modal');
@@ -700,17 +715,17 @@
         // Smart Interaction: Clicking the active thumb plays video; clicking inactive thumb makes it active.
         reelContainer.addEventListener('click', (e) => {
             if (e.target.closest('.pagination-dots')) return;
-            
+
             const clickedThumb = e.target.closest('.video-thumb');
             const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
-            
+
             if (clickedThumb && clickedThumb.classList.contains('active')) {
                 // Play video if the clicked thumb is already at the front
                 openVideoModal(activeIndex);
             } else if (clickedThumb) {
-                 // Bring clicked thumb to the front
-                 const clickedIndex = thumbs.indexOf(clickedThumb);
-                 setActiveItem(clickedIndex);
+                // Bring clicked thumb to the front
+                const clickedIndex = thumbs.indexOf(clickedThumb);
+                setActiveItem(clickedIndex);
             } else {
                 // Clicked elsewhere, just cycle
                 cycleReel(1);
