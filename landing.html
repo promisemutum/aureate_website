@@ -383,6 +383,59 @@
             margin-top: 10px;
         }
 
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .video-container {
+            position: relative;
+            width: 90%;
+            max-width: 500px; /* Usually portrait for reels */
+            max-height: 90vh;
+        }
+
+        .video-container video {
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            outline: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #e8a838;
+        }
+
         /* Bottom */
         .bottom-section {
             background: linear-gradient(180deg, #e0e8e4, #e8eee8);
@@ -555,6 +608,17 @@
         <p class="bottom-description">DESCRIPTION</p>
     </section>
 
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal">
+        <span class="close-modal">&times;</span>
+        <div class="video-container">
+            <video id="modalVideo" controls autoplay>
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
     <script>
         const reelContainer = document.getElementById('reelContainer');
         const thumbs = Array.from(reelContainer.querySelectorAll('.video-thumb'));
@@ -604,10 +668,53 @@
             setActiveItem(nextIndex);
         }
 
-        // Clean & Reusable: Clicking the container cycles the active thumb
+        const videoSources = [
+            "media/reel1.MP4",
+            "media/reel2.MP4",
+            "media/reel3.MP4"
+        ];
+        
+        const videoModal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const closeModal = document.querySelector('.close-modal');
+
+        function openVideoModal(index) {
+            if (videoSources[index]) {
+                modalVideo.src = videoSources[index];
+                videoModal.classList.add('show');
+                modalVideo.play().catch(e => console.log('Autoplay prevented', e));
+            }
+        }
+
+        function closeVideoModal() {
+            videoModal.classList.remove('show');
+            modalVideo.pause();
+            modalVideo.src = "";
+        }
+
+        closeModal.addEventListener('click', closeVideoModal);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) closeVideoModal();
+        });
+
+        // Smart Interaction: Clicking the active thumb plays video; clicking inactive thumb makes it active.
         reelContainer.addEventListener('click', (e) => {
             if (e.target.closest('.pagination-dots')) return;
-            cycleReel(1);
+            
+            const clickedThumb = e.target.closest('.video-thumb');
+            const activeIndex = thumbs.findIndex(t => t.classList.contains('active'));
+            
+            if (clickedThumb && clickedThumb.classList.contains('active')) {
+                // Play video if the clicked thumb is already at the front
+                openVideoModal(activeIndex);
+            } else if (clickedThumb) {
+                 // Bring clicked thumb to the front
+                 const clickedIndex = thumbs.indexOf(clickedThumb);
+                 setActiveItem(clickedIndex);
+            } else {
+                // Clicked elsewhere, just cycle
+                cycleReel(1);
+            }
         });
 
         // Mobile Swipe Support
