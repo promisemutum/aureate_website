@@ -437,6 +437,25 @@
             color: #e8a838;
         }
 
+        /* Ebook Section */
+        .ebook-section {
+            width: 100%;
+            margin: 60px 0;
+            height: 80vh;
+            min-height: 600px;
+            background: url('images/init/init_ebook_pc.jpeg') no-repeat center center;
+            background-size: cover;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.4s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ebook-section:hover {
+            opacity: 0.95;
+        }
+
         /* Bottom */
         .bottom-section {
             background: linear-gradient(180deg, #e0e8e4, #e8eee8);
@@ -450,21 +469,24 @@
 
         .bottom-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
+            font-size: 80px;
             color: #c43838;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 400;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .bottom-description {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 72px;
+            font-size: 22px;
             color: #c43838;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: none;
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         @media (max-width: 768px) {
@@ -507,9 +529,20 @@
                 height: 220px;
             }
 
+            .ebook-section {
+                height: 50vh;
+                min-height: 350px;
+                margin: 40px 0;
+            }
+
+            .bottom-title {
+                font-size: 42px;
+                letter-spacing: 2px;
+            }
+
             .bottom-description {
-                font-size: 48px;
-                letter-spacing: 4px;
+                font-size: 18px;
+                letter-spacing: 0.5px;
             }
 
             .nav-links {
@@ -617,10 +650,23 @@
         </div>
     </section>
 
+    <!-- Ebook Highlight Section -->
+    <section class="ebook-section"></section>
+
     <!-- Bottom Section -->
     <section class="bottom-section">
         <h2 class="bottom-title">ABOUT AUREATEREALM</h2>
-        <p class="bottom-description">DESCRIPTION</p>
+        <p class="bottom-description">Aureate Realm is a space built for those who seek more than surface-level living.
+            It exists at the intersection of clarity, intention, and inner depth—where attention becomes the gateway to
+            a richer experience of reality. In a world driven by noise, urgency, and constant distraction, Aureate Realm
+            offers a return to presence. It is not just a brand, but a perspective—a quiet rebellion against the
+            superficial, and a movement toward meaning, awareness, and alignment. Through carefully crafted digital
+            works and evolving physical pieces, Aureate Realm provides tools, ideas, and expressions that encourage you
+            to slow down, observe, and reconnect with what is real within you. Every creation is designed with
+            intention—to not just be consumed, but to be experienced. This is for those who move with awareness even
+            when surrounded by chaos. For those who continue forward despite doubt, illusion, and resistance. For those
+            who choose depth over distraction. Aureate Realm is not something you follow. It’s something you
+            enter—through attention.</p>
     </section>
 
     <!-- Video Modal -->
