@@ -17,6 +17,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #f0ede8;
+            margin: 0;
         }
 
         .top-bar {
@@ -440,14 +441,13 @@
         /* Ebook Section */
         .ebook-section {
             width: 100%;
-            margin: 60px 0;
-            height: 80vh;
-            min-height: 600px;
+            height: 100vh;
+            margin: 0;
             background: url('images/init/init_ebook_pc.jpeg') no-repeat center center;
             background-size: cover;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             transition: opacity 0.4s ease;
-            cursor: default;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
@@ -530,9 +530,8 @@
             }
 
             .ebook-section {
-                height: 50vh;
-                min-height: 350px;
-                margin: 40px 0;
+                height: 100vh;
+                margin: 0;
             }
 
             .bottom-title {
@@ -651,7 +650,7 @@
     </section>
 
     <!-- Ebook Highlight Section -->
-    <section class="ebook-section"></section>
+    <section class="ebook-section" id="init_ebook_pc"></section>
 
     <!-- Bottom Section -->
     <section class="bottom-section">
@@ -808,6 +807,11 @@
                 e.stopPropagation();
                 setActiveItem(idx);
             });
+        });
+
+        // Redirect to the ebook view page on click
+        document.getElementById('init_ebook_pc').addEventListener('click', () => {
+            window.location.href = 'ebook_view.html';
         });
     </script>
 </body>
