@@ -175,6 +175,70 @@
             border: 1px solid rgba(241, 210, 121, 0.2);
         }
 
+        /* About Section Styles */
+        .about-section {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding: 0 10px;
+        }
+
+        .about-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .about-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f1d279;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(241, 210, 121, 0.3);
+            line-height: 1.3;
+        }
+
+        .about-divider {
+            width: 60px;
+            height: 1px;
+            background-color: #f1d279;
+            opacity: 0.4;
+            margin: 0.2rem 0;
+        }
+
+        .about-text-p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .preview-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f1d279;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 1.5rem;
+            margin-bottom: -0.5rem;
+            text-shadow: 0 0 10px rgba(241, 210, 121, 0.2);
+            text-align: center;
+        }
+
         /* Animation Definition */
         @keyframes fadeInText {
             from {
@@ -331,7 +395,7 @@
         <img src="./images/ebook/bookicon.PNG" alt="Aureate Doctrine" class="book-img">
         <div class="book-text">Aureate Doctrine</div>
         <div class="book-subtext">Step into a world where clarity replaces chaos, and your truest self finally speaks
-            louder than the noise around you.</div>
+            louder than the noise around you. <br> 50 Pages of Mindset and Visual insights</div>
         <a href="#" class="read-button">READ EBOOK</a>
         <div class="scroll-down" onclick="document.getElementById('previews').scrollIntoView({behavior: 'smooth'})">
             <span>Read About</span>
@@ -341,6 +405,18 @@
 
     <!-- Previews Section (Mobile Only) -->
     <div id="previews" class="previews-container">
+        <!-- About Section -->
+        <div class="about-section">
+            <div class="about-label">About the Ebook</div>
+            <div class="about-title">Clarity Beyond The Noise</div>
+            <div class="about-divider"></div>
+            <div class="about-text-p">Rather than offering surface-level motivation, the book dives into the emotional and mental state required to evolve into your highest form. It explores themes of isolation, purpose, temptation, identity, and the quiet pursuit of greatness in a distracted modern world.</div>
+            <div class="about-text-p">Every page is crafted to feel intentional - combining reflective writing, symbolic imagery, and elegant atmosphere that invites readers into "The Realm": a space where the mind becomes clear and the future self begins to emerge.</div>
+            <div class="about-text-p">Whether you are a creator, dreamer, entrepreneur, or someone searching for deeper meaning, this ebook is designed to reconnect you with the version of yourself hidden beneath the noise.</div>
+        </div>
+
+        <div class="preview-title">Book Previews</div>
+
         <img src="./images/ebook/preview1.jpeg" class="preview-img" alt="Preview 1">
         <img src="./images/ebook/preview2.png" class="preview-img" alt="Preview 2">
         <img src="./images/ebook/preview3.png" class="preview-img" alt="Preview 3">
