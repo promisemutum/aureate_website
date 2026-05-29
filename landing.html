@@ -431,13 +431,66 @@
     .ebook-section {
       width: 100%;
       height: var(--ebook-h, 100vh);
-      background: url('images/init/init_ebook_pc.jpeg') center/cover no-repeat;
-      cursor: pointer;
-      transition: opacity 0.4s;
+      background: url('images/landing/ebook_back.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
     }
 
-    .ebook-section:hover {
-      opacity: 0.92;
+    .ebook-link {
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+      background: transparent;
+      padding: 0;
+      border: none;
+      animation: ebookPulse 1.6s ease-in-out infinite;
+    }
+
+    .ebook-link:hover {
+      animation: none;
+      transform: scale(1.08);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .ebook-clickable-img {
+      display: block;
+      height: calc(var(--ebook-h, 100vh) * 0.3);
+      max-height: 420px;
+      min-height: 180px;
+      max-width: 85vw;
+      width: auto;
+      object-fit: contain;
+      transition: filter 0.3s ease;
+    }
+
+    .ebook-link:hover .ebook-clickable-img {
+      filter: brightness(1.05);
+    }
+
+    .ebook-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      color: #ffffff;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes ebookPulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     /* ==========================================
@@ -652,7 +705,7 @@
     <img class="hero-image" src="https://images.unsplash.com/photo-1467991521834-fb8e202c7074?w=1200&h=600&fit=crop" alt="Aureate Realm Backdrop">
     <div class="hero-content">
       <h1 class="hero-title">Aureate Realm</h1>
-      <p class="hero-subtitle">— Start Your Journey —</p>
+      <p class="hero-subtitle">Start Your Journey</p>
     </div>
   </section>
 
@@ -679,7 +732,12 @@
   <!-- ==========================================
        INTERACTIVE EBOOK COVER BANNER
        ========================================== -->
-  <section class="ebook-section" id="ebookSection"></section>
+  <section class="ebook-section" id="ebookSection">
+    <a href="ebook_view.html" class="ebook-link">
+      <img src="images/ebook/clickable.jpeg" alt="Ebook Cover" class="ebook-clickable-img">
+    </a>
+    <div class="ebook-price">$ 9.99</div>
+  </section>
 
   <!-- ==========================================
        BRAND DOCTRINE / PHILOSOPHY FOOTER
@@ -751,7 +809,6 @@
     const infoContent = document.querySelector('.reel-info-content');
     const modalVideo = document.getElementById('modalVideo');
     const videoModal = document.getElementById('videoModal');
-    const ebookSection = document.getElementById('ebookSection');
     const bottomSection = document.getElementById('bottomSection');
 
     // Initialize slide components
@@ -838,10 +895,7 @@
       if (e.target === videoModal) closeVideo(); 
     });
 
-    // Ebook cover navigation link
-    ebookSection.addEventListener('click', () => {
-      window.location.href = 'ebook_view.html';
-    });
+    // Ebook cover navigation is handled directly by the <a> link in HTML.
 
     // Touch support hooks (swipe left / right)
     let tx = 0;
