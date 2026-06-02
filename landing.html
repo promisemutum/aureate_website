@@ -14,7 +14,6 @@
        DESIGN SYSTEM & CSS VARIABLES
        ========================================== */
     :root {
-      /* Brand Color Palette */
       --gold: #d9a441;
       --gold-soft: #e8bf78;
       --terracotta: #983c2d;
@@ -24,17 +23,10 @@
       --ink: #2b2621;
       --muted: #8a7f72;
       --line: #d8cfbf;
-      
-      /* Animation Timing */
       --ease: cubic-bezier(.25, .8, .25, 1);
     }
 
-    /* Reset & Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -55,52 +47,19 @@
       border-bottom: 1px solid var(--line);
     }
 
-    .top-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .top-bar-left { display: flex; align-items: center; gap: 14px; }
 
-    /* Stylized Menu Icon */
-    .menu-dots {
-      display: flex;
-      gap: 5px;
-      padding: 4px;
-    }
+    .menu-dots { display: flex; gap: 5px; padding: 4px; }
+    .menu-dots span { width: 6px; height: 6px; background: var(--ink); border-radius: 50%; }
 
-    .menu-dots span {
-      width: 6px;
-      height: 6px;
-      background: var(--ink);
-      border-radius: 50%;
-    }
+    .logo-box { width: 48px; height: 36px; }
+    .logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-    .logo-box {
-      width: 48px;
-      height: 36px;
-    }
+    .top-bar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
 
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .nav-links { display: flex; gap: 32px; }
 
-    .top-bar-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 14px;
-    }
-
-    /* Navigation Links */
-    .nav-links {
-      display: flex;
-      gap: 32px;
-    }
-
-    .nav-links a,
-    .products-link {
+    .nav-links a, .products-link {
       text-decoration: none;
       color: var(--ink);
       font-family: 'Inter', sans-serif;
@@ -111,112 +70,51 @@
       transition: color 0.3s;
     }
 
-    .nav-links a:hover,
-    .products-link:hover {
-      color: var(--terracotta);
-    }
+    .nav-links a:hover, .products-link:hover { color: var(--terracotta); }
 
-    .products-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      cursor: pointer;
-    }
+    .products-link { display: flex; align-items: center; gap: 10px; font-size: 12px; cursor: pointer; }
 
-    /* Stylized Globe Icon */
     .globe-icon {
-      width: 18px;
-      height: 18px;
-      border: 1.5px solid var(--muted);
-      border-radius: 50%;
-      position: relative;
-      display: inline-block;
+      width: 18px; height: 18px; border: 1.5px solid var(--muted); border-radius: 50%;
+      position: relative; display: inline-block;
     }
-
     .globe-icon::before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 12px;
-      height: 12px;
-      border-left: 1.5px solid var(--muted);
-      border-right: 1.5px solid var(--muted);
-      border-radius: 50%;
+      content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+      width: 12px; height: 12px; border-left: 1.5px solid var(--muted); border-right: 1.5px solid var(--muted); border-radius: 50%;
     }
-
     .globe-icon::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 1px;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 1px;
-      background: var(--muted);
+      content: ''; position: absolute; top: 50%; left: 1px; transform: translateY(-50%);
+      width: 14px; height: 1px; background: var(--muted);
     }
 
     /* ==========================================
        HERO SECTION
        ========================================== */
     .hero {
-      width: 100%;
-      aspect-ratio: 16/9;
-      min-height: 260px;
-      max-height: 72vh;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%; aspect-ratio: 16/9; min-height: 260px; max-height: 72vh;
+      position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
       background: #1a1612;
     }
 
     .hero-image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-      opacity: 0.55;
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 1; opacity: 0.55;
     }
 
     .hero-content {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 900px;
-      padding: 0 20px;
-      height: 80%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
+      position: relative; z-index: 2; width: 100%; max-width: 900px; padding: 0 20px; height: 80%;
+      display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
     }
 
     .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 64px;
-      font-weight: 500;
-      color: var(--gold-soft); /* Reverted to gold-soft for title */
-      letter-spacing: 14px;
-      text-transform: uppercase;
-      line-height: 1;
+      font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 500;
+      color: var(--gold-soft); letter-spacing: 14px; text-transform: uppercase; line-height: 1;
       text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
     }
 
     .hero-subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      color: #f0e7d6;
-      letter-spacing: 8px;
-      font-weight: 300;
-      font-style: italic;
-      text-transform: uppercase;
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #f0e7d6;
+      letter-spacing: 8px; font-weight: 300; font-style: italic; text-transform: uppercase;
     }
 
     /* ==========================================
@@ -224,205 +122,76 @@
        ========================================== */
     .middle-section {
       background: linear-gradient(135deg, #e8dfd0 0%, #efe6d6 50%, #e2d7c4 100%);
-      padding: 70px 40px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 50px;
-      flex-wrap: wrap;
-      overflow-x: hidden;
+      padding: 70px 40px; display: flex; justify-content: center; align-items: flex-start;
+      gap: 50px; flex-wrap: wrap; overflow-x: hidden;
     }
 
-    .reel-wrapper {
-      padding: 0 60px;
-    }
+    .reel-wrapper { padding: 0 60px; }
+    .reel-container { display: flex; align-items: center; position: relative; cursor: pointer; }
 
-    .reel-container {
-      display: flex;
-      align-items: center;
-      position: relative;
-      cursor: pointer;
-    }
+    .video-thumb { width: 250px; z-index: 1; flex-shrink: 0; transition: width 0.45s var(--ease), z-index 0s linear 0.1s; }
+    .video-thumb~.video-thumb { margin-left: -50px; }
+    .video-thumb.active { width: 280px; z-index: 2; }
+    .video-thumb:hover .thumb-image img { transform: scale(1.02); }
 
-    /* Video Thumbnail Cards */
-    .video-thumb {
-      width: 250px;
-      z-index: 1;
-      flex-shrink: 0;
-      transition: width 0.45s var(--ease), z-index 0s linear 0.1s;
-    }
-
-    /* Overlay overlap effect */
-    .video-thumb~.video-thumb {
-      margin-left: -50px;
-    }
-
-    .video-thumb.active {
-      width: 280px;
-      z-index: 2;
-    }
-
-    .video-thumb:hover .thumb-image img {
-      transform: scale(1.02);
-    }
-
-    .thumb-image {
-      position: relative;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 6px 24px rgba(60, 40, 20, 0.35);
-    }
-
-    .thumb-image img {
-      width: 100%;
-      display: block;
-      transition: transform 0.3s ease;
-    }
+    .thumb-image { position: relative; border-radius: 4px; overflow: hidden; box-shadow: 0 6px 24px rgba(60, 40, 20, 0.35); }
+    .thumb-image img { width: 100%; display: block; transition: transform 0.3s ease; }
 
     .thumb-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(43, 38, 33, 0.7));
-      border-radius: 4px;
-      pointer-events: none;
+      position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(43, 38, 33, 0.7));
+      border-radius: 4px; pointer-events: none;
     }
 
-    /* Play Button Icon */
     .play-icon {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 30px;
-      height: 30px;
-      background: rgba(43, 38, 33, 0.6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 12px; right: 12px; width: 30px; height: 30px;
+      background: rgba(43, 38, 33, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center;
     }
-
     .play-icon::after {
-      content: '';
-      border-style: solid;
-      border-width: 5px 0 5px 9px;
-      border-color: transparent transparent transparent #ffffff; /* Optimised: Changed gold-soft to white */
-      margin-left: 2px;
+      content: ''; border-style: solid; border-width: 5px 0 5px 9px;
+      border-color: transparent transparent transparent #ffffff; margin-left: 2px;
     }
 
     .thumb-title {
-      position: absolute;
-      bottom: 40px;
-      left: 12px;
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: 22px;
-      color: #ffffff; /* Optimised: Changed gold-soft to white */
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-      line-height: 1.2;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      position: absolute; bottom: 40px; left: 12px; font-family: 'Cormorant Garamond', serif;
+      font-weight: 600; font-size: 22px; color: #ffffff; text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      line-height: 1.2; letter-spacing: 2px; text-transform: uppercase;
     }
 
     .thumb-views {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: #f0e7d6;
-      font-weight: 500;
-      letter-spacing: 1px;
+      position: absolute; bottom: 12px; left: 12px; display: flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif; font-size: 12px; color: #f0e7d6; font-weight: 500; letter-spacing: 1px;
     }
 
-    /* Slider Dot Navigation */
-    .pagination-dots {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 22px;
-    }
+    .pagination-dots { display: flex; justify-content: center; gap: 10px; margin-top: 22px; }
+    .pagination-dots span { width: 8px; height: 8px; border-radius: 50%; background: #c8bda8; cursor: pointer; transition: all 0.25s; }
+    .pagination-dots span.active { background: var(--terracotta); transform: scale(1.2); }
 
-    .pagination-dots span {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #c8bda8;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-
-    .pagination-dots span.active {
-      background: var(--terracotta);
-      transform: scale(1.2);
-    }
-
-    /* About Reel Panel Card */
     .about-reel-card {
-      width: 340px;
-      height: 500px;
-      background: #454545; /* Light gray/sand color box */
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 32px;
-      box-shadow: 0 10px 34px rgba(43, 38, 33, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-      overflow: hidden;
+      width: 340px; height: 500px; background: #454545; border: 1px solid var(--line); border-radius: 6px;
+      padding: 32px; box-shadow: 0 10px 34px rgba(43, 38, 33, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      display: flex; flex-direction: column; gap: 22px; overflow: hidden;
     }
 
     .card-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: var(--muted); /* Muted gray title */
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      font-weight: 500;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line);
+      font-family: 'Inter', sans-serif; font-size: 12px; color: var(--muted); letter-spacing: 4px;
+      text-transform: uppercase; font-weight: 500; padding-bottom: 12px; border-bottom: 1px solid var(--line);
     }
 
     .reel-info-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      overflow-y: auto;
-      padding-right: 10px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--muted) transparent;
+      flex: 1; display: flex; flex-direction: column; width: 100%; overflow-y: auto; padding-right: 10px;
+      scrollbar-width: thin; scrollbar-color: var(--muted) transparent;
     }
-
-    .reel-info-content::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .reel-info-content::-webkit-scrollbar-thumb {
-      background: var(--muted);
-      border-radius: 10px;
-    }
+    .reel-info-content::-webkit-scrollbar { width: 4px; }
+    .reel-info-content::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; }
 
     .reel-info-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      color: #d9a441; /* Dark text color on light background */
-      font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #d9a441; font-weight: 600;
+      line-height: 1.2; letter-spacing: 1px; text-transform: uppercase;
     }
 
     .reel-info-text {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: #ffffff; /* Dark gray-brown body text for readability */
-      line-height: 1.7;
-      margin-top: 14px;
-      white-space: pre-line;
-      font-weight: 300;
+      font-family: 'Inter', sans-serif; font-size: 14px; color: #ffffff; line-height: 1.7;
+      margin-top: 14px; white-space: pre-line; font-weight: 300;
     }
 
     /* ==========================================
@@ -431,12 +200,28 @@
     .ebook-section {
       width: 100%;
       height: var(--ebook-h, 100vh);
-      background: url('images/landing/ebook_back.png') center/cover no-repeat;
+      background-color: #f3e2b4; /* Frame color */
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 24px; 
+      position: relative; 
+      box-sizing: border-box;
+      padding: 20px; 
+    }
+
+    .ebook-section::before {
+      content: "";
+      position: absolute;
+      inset: 20px; 
+      background: url('images/landing/ebook_back.png') center/cover no-repeat;
+      z-index: 0; 
+    }
+
+    .ebook-section > * {
+      position: relative;
+      z-index: 1;
     }
 
     .ebook-link {
@@ -460,37 +245,63 @@
     .ebook-clickable-img {
       display: block;
       height: calc(var(--ebook-h, 100vh) * 0.3);
-      max-height: 420px;
-      min-height: 180px;
+      max-height: 350px;
+      min-height: 150px;
       max-width: 85vw;
       width: auto;
       object-fit: contain;
       transition: filter 0.3s ease;
     }
 
-    .ebook-link:hover .ebook-clickable-img {
-      filter: brightness(1.05);
-    }
+    .ebook-link:hover .ebook-clickable-img { filter: brightness(1.05); }
 
     .ebook-price {
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
-      color: #ffffff;
+      color: #f3e2b4; 
       font-weight: 500;
       letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8); 
     }
 
     @keyframes ebookPulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-      }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* ==========================================
+       EBOOK TEXT (NORMAL DIV, NO GLOW)
+       ========================================== */
+    .glowing-access-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Aligns text to the left on PC */
+      justify-content: center;
+    }
+
+    .glowing-access-btn .btn-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #f3e2b4;
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .glowing-access-btn .btn-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #f3e2b4;
+      letter-spacing: 2px;
+      opacity: 0.9;
+      text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      text-align: center;
     }
 
     /* ==========================================
@@ -498,174 +309,127 @@
        ========================================== */
     .bottom-section {
       background: rgba(152, 60, 45, 1);
-      padding: 70px 50px;
-      text-align: center;
+      padding: 100px 10%; 
+      text-align: left;
       margin: 0;
-      border-radius: 0;
-      box-shadow: none;
       position: relative;
       overflow: hidden;
     }
 
-    .bottom-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(232, 191, 120, 0.1) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
     .bottom-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 82px;
+      font-size: 75px;
       color: #ffffff;
-      letter-spacing: 6px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 400;
-      font-style: italic;
-      margin-bottom: 30px;
-      position: relative;
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+      font-weight: 700;
+      margin-bottom: 40px; 
+      text-align: left;
     }
 
     .bottom-description {
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
       color: #fdf5e6;
       line-height: 1.75;
-      max-width: 820px;
-      margin: 0 auto;
-      font-weight: 300;
-      position: relative;
-      letter-spacing: 0.3px;
+      max-width: 100%; 
+      margin-bottom: 40px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: left;
     }
 
     /* ==========================================
        VIDEO MODAL OVERLAY
        ========================================== */
     .video-modal {
-      position: fixed;
-      z-index: 1000;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      display: none;
-      align-items: center;
-      justify-content: center;
+      position: fixed; z-index: 1000; inset: 0; background: rgba(0, 0, 0, 0.92);
+      display: none; align-items: center; justify-content: center;
     }
+    .video-modal.show { display: flex; }
 
-    .video-modal.show {
-      display: flex;
-    }
-
-    .video-container {
-      position: relative;
-      width: 90%;
-      max-width: 500px;
-    }
-
+    .video-container { position: relative; width: 90%; max-width: 500px; }
     .video-container video {
-      width: 100%;
-      max-height: 90vh;
-      border-radius: 8px;
-      background: #000;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      outline: none;
+      width: 100%; max-height: 90vh; border-radius: 8px; background: #000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); outline: none;
     }
 
     .close-modal {
-      position: absolute;
-      top: 15px;
-      right: 30px;
-      color: #fff;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 1001;
-      transition: color 0.3s;
+      position: absolute; top: 15px; right: 30px; color: #fff; font-size: 40px;
+      font-weight: bold; cursor: pointer; z-index: 1001; transition: color 0.3s;
     }
-
-    .close-modal:hover {
-      color: #ffffff;
-      opacity: 0.8;
-    }
+    .close-modal:hover { color: #ffffff; opacity: 0.8; }
 
     /* ==========================================
        RESPONSIVE DESIGN (MEDIA QUERIES)
        ========================================== */
     @media(max-width: 768px) {
-      .hero-title {
-        font-size: 34px;
-        letter-spacing: 5px;
+      .hero-title { font-size: 34px; letter-spacing: 5px; }
+      .hero-subtitle { font-size: 15px; letter-spacing: 4px; }
+
+      .middle-section { flex-direction: column; align-items: center; padding: 40px 15px; gap: 34px; }
+      .reel-wrapper { padding: 0 20px; }
+      .video-thumb { width: 140px; }
+      .video-thumb~.video-thumb { margin-left: -55px; }
+      .video-thumb.active { width: 160px; }
+      .thumb-title { font-size: 15px; letter-spacing: 1px; }
+      .about-reel-card { width: 100%; max-width: 340px; height: 350px; }
+      .reel-info-title { font-size: 22px; }
+      .reel-info-text { font-size: 13px; }
+
+      .bottom-title { font-size: 40px; letter-spacing: 3px; }
+      .bottom-description { font-size: 14px; line-height: 1.6; }
+      .bottom-section { padding: 45px 24px; }
+
+      .nav-links { gap: 18px; }
+      .nav-links a { font-size: 10px; letter-spacing: 2px; }
+      
+      /* Mobile Ebook Layout adjustments */
+      .glowing-access-btn {
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    /* ==========================================
+       PC / DESKTOP ORIENTATION FOR EBOOK SECTION
+       ========================================== */
+    @media (min-width: 900px) {
+      .ebook-section {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 80px; /* Space between left group and right text */
       }
 
-      .hero-subtitle {
-        font-size: 15px;
-        letter-spacing: 4px;
-      }
-
-      .middle-section {
+      .ebook-left-group {
+        display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 40px 15px;
-        gap: 34px;
+        gap: 16px; /* ADDED: This creates a clean gap between the image and the price */
       }
 
-      .reel-wrapper {
-        padding: 0 20px;
+      .ebook-link {
+        margin-bottom: 0; /* REMOVED: The negative margin that was pulling them together */
+        z-index: 2;
+        position: relative;
+        line-height: 0;
       }
 
-      .video-thumb {
-        width: 140px;
+      .ebook-price {
+        margin: 0;
+        z-index: 1;
+        position: relative;
       }
 
-      .video-thumb~.video-thumb {
-        margin-left: -55px;
+      .glowing-access-btn {
+        align-items: flex-start; 
+        text-align: left;
       }
 
-      .video-thumb.active {
-        width: 160px;
-      }
-
-      .thumb-title {
-        font-size: 15px;
-        letter-spacing: 1px;
-      }
-
-      .about-reel-card {
-        width: 100%;
-        max-width: 340px;
-        height: 240px;
-      }
-
-      .reel-info-title {
-        font-size: 22px;
-      }
-
-      .reel-info-text {
-        font-size: 13px;
-      }
-
-      .bottom-title {
-        font-size: 40px;
-        letter-spacing: 3px;
-      }
-
-      .bottom-description {
-        font-size: 14px;
-        line-height: 1.6;
-      }
-
-      .bottom-section {
-        padding: 45px 24px;
-      }
-
-      .nav-links {
-        gap: 18px;
-      }
-
-      .nav-links a {
-        font-size: 10px;
-        letter-spacing: 2px;
+      .ebook-clickable-img {
+        max-height: 450px; 
       }
     }
   </style>
@@ -688,7 +452,7 @@
     </div>
     <div class="top-bar-right">
       <div class="nav-links">
-        <a href="#bottomSection">About</a> <!-- Linked directly to bottom section philosophy anchor -->
+        <a href="#bottomSection">About</a>
         <a href="#bottomSection">Contact</a>
       </div>
       <div class="products-link" onclick="window.location.href='digital_products.html'">
@@ -713,13 +477,11 @@
        MIDDLE PORTION (REELS SYSTEM)
        ========================================== -->
   <section class="middle-section">
-    <!-- Carousel slider structure -->
     <div class="reel-wrapper">
       <div class="reel-container" id="reelContainer"></div>
       <div class="pagination-dots" id="paginationDots"></div>
     </div>
     
-    <!-- Reel info card panel -->
     <div class="about-reel-card">
       <div class="card-title">About Reel</div>
       <div class="reel-info-content">
@@ -730,13 +492,24 @@
   </section>
 
   <!-- ==========================================
-       INTERACTIVE EBOOK COVER BANNER
-       ========================================== -->
+      INTERACTIVE EBOOK COVER BANNER
+      ========================================== -->
   <section class="ebook-section" id="ebookSection">
-    <a href="ebook_view.html" class="ebook-link">
-      <img src="images/ebook/clickable.jpeg" alt="Ebook Cover" class="ebook-clickable-img">
-    </a>
-    <div class="ebook-price">$ 9.99</div>
+    
+    <!-- LEFT SIDE: Grouped together -->
+    <div class="ebook-left-group">
+      <a href="ebook_view.html" class="ebook-link">
+        <img src="images/ebook/clickable.jpeg" alt="Ebook Cover" class="ebook-clickable-img">
+      </a>
+      <div class="ebook-price">$ 9.99</div>
+    </div>
+    
+    <!-- RIGHT SIDE: Normal Text Block (No Glow) -->
+    <div class="glowing-access-btn">
+      <span class="btn-title">ACCESS NOW</span>
+      <span class="btn-subtitle">A GOLDEN ZONE WHERE CHAOS AND CLARITY MEET</span>
+    </div>
+
   </section>
 
   <!-- ==========================================
@@ -761,7 +534,7 @@
 
   <!-- ==========================================
        MODAL PLAYER FOR MP4 MEDIA
-       ========================================== */ -->
+       ========================================== -->
   <div id="videoModal" class="video-modal">
     <span class="close-modal">&times;</span>
     <div class="video-container">
@@ -773,10 +546,8 @@
        APPLICATION INTERACTION SCRIPTS
        ========================================== -->
   <script>
-    // Visual icons & templates
     const EYE_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f0e7d6" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
-    // Detailed Reels configuration array
     const reels = [
       {
         img: "images/example/example_pc.jpeg",
@@ -801,7 +572,6 @@
       }
     ];
 
-    // Dom Selection hooks
     const reelContainer = document.getElementById('reelContainer');
     const paginationDots = document.getElementById('paginationDots');
     const infoTitle = document.getElementById('reelInfoTitle');
@@ -811,9 +581,7 @@
     const videoModal = document.getElementById('videoModal');
     const bottomSection = document.getElementById('bottomSection');
 
-    // Initialize slide components
     reels.forEach((r, i) => {
-      // Build carousel items
       reelContainer.insertAdjacentHTML('beforeend', `
         <div class="video-thumb" data-idx="${i}">
           <div class="thumb-image">
@@ -823,47 +591,31 @@
             <div class="thumb-views">${EYE_SVG} ${r.views}</div>
           </div>
         </div>`);
-      // Build paging indicators
       paginationDots.insertAdjacentHTML('beforeend', `<span data-idx="${i}"></span>`);
     });
 
     const thumbs = [...reelContainer.children];
     const dots = [...paginationDots.children];
 
-    /**
-     * Set active reel slide index and update details panel.
-     * @param {number} i - Index of the selected reel.
-     */
     function setActive(i) {
       thumbs.forEach((t, idx) => t.classList.toggle('active', idx === i));
       dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
       infoTitle.textContent = reels[i].title;
       infoText.textContent = reels[i].text;
-      infoContent.scrollTop = 0; // Reset details scroll offset
+      infoContent.scrollTop = 0; 
     }
 
-    /**
-     * Cycles through reel indices by custom direction offset.
-     * @param {number} dir - Movement direction (-1 / 1).
-     */
     function cycle(dir = 1) {
       const cur = thumbs.findIndex(t => t.classList.contains('active'));
       setActive((cur + dir + thumbs.length) % thumbs.length);
     }
 
-    /**
-     * Open modal video overlay and execute media playback.
-     * @param {number} i - Video reel configuration index.
-     */
     function openVideo(i) {
       modalVideo.src = reels[i].video;
       videoModal.classList.add('show');
       modalVideo.play().catch(() => {});
     }
 
-    /**
-     * Close modal panel and cleanup media resources.
-     */
     function closeVideo() {
       videoModal.classList.remove('show');
       modalVideo.pause();
@@ -871,33 +623,24 @@
       modalVideo.load();
     }
 
-    // Set initial active state
     setActive(0);
 
-    // Event Delegation: Carousel clicks
     reelContainer.addEventListener('click', e => {
       const thumb = e.target.closest('.video-thumb');
-      if (!thumb) return cycle(1); // Clicked in empty region inside container: cycle forward
-      
+      if (!thumb) return cycle(1); 
       const idx = +thumb.dataset.idx;
-      // If already active, trigger video modal; otherwise focus on target thumbnail
       thumb.classList.contains('active') ? openVideo(idx) : setActive(idx);
     });
 
-    // Pager indicators navigation
     paginationDots.addEventListener('click', e => {
       if (e.target.tagName === 'SPAN') setActive(+e.target.dataset.idx);
     });
 
-    // Modal control actions
     document.querySelector('.close-modal').addEventListener('click', closeVideo);
     videoModal.addEventListener('click', e => { 
       if (e.target === videoModal) closeVideo(); 
     });
 
-    // Ebook cover navigation is handled directly by the <a> link in HTML.
-
-    // Touch support hooks (swipe left / right)
     let tx = 0;
     reelContainer.addEventListener('touchstart', e => { 
       tx = e.changedTouches[0].screenX; 
@@ -910,9 +653,6 @@
       }
     }, { passive: true });
 
-    /**
-     * Dynamically match the height of Ebook banner to visual bottom info section.
-     */
     function syncEbookHeight() {
       const h = bottomSection.getBoundingClientRect().height;
       document.documentElement.style.setProperty('--ebook-h', h + 'px');
