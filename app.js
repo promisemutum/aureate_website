@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // FIXED: Hybrid approach for touch/click differentiation
+    // Hybrid approach for touch/click differentiation
     iconWrappers.forEach(wrapper => {
         wrapper.addEventListener('pointerdown', (e) => {
             // Store initial touch position
             touchData.startX = e.clientX;
             touchData.startY = e.clientY;
             touchData.isScrolling = false;
-        }, { passive: true }); // 👈 Critical: passive: true for scroll performance
+        }, { passive: true }); 
 
         wrapper.addEventListener('pointermove', (e) => {
             // Calculate movement distance
@@ -58,11 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Play sound ONLY if it was a tap (not scroll)
             if (!touchData.isScrolling) {
                 playClickSound();
-                // Removed e.preventDefault() to allow <a> tags to function on mobile
             }
         });
 
-        // Also handle click for Desktop (since we might not preventDefault there)
+        // Also handle click for Desktop
         wrapper.addEventListener('click', (e) => {
             if (window.innerWidth > MOBILE_BREAKPOINT) {
                 playClickSound();
@@ -98,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isActive = i === activeIndex;
             wrapper.classList.toggle('active', isActive);
 
-            // 🔥 FIX: Only active icon should receive pointer events (Mobile only)
+            // Only active icon should receive pointer events (Mobile only)
             wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
         });
     };
@@ -124,14 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
             carousel.style.transition = 'none';
         }
 
+        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
+        // This ensures the capture is set on the container (scene), not a child element that might change during drag.
         try {
-            if (e.target.setPointerCapture) {
-                e.target.setPointerCapture(e.pointerId);
-            }
-        } catch (err) {
             if (e.currentTarget.setPointerCapture) {
                 e.currentTarget.setPointerCapture(e.pointerId);
             }
+        } catch (err) {
+            // Ignore
         }
     };
 
@@ -162,9 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
+        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
+        // This ensures the capture is reliably released from the container.
         try {
-            if (e.target.releasePointerCapture) {
-                e.target.releasePointerCapture(e.pointerId);
+            if (e.currentTarget.releasePointerCapture) {
+                e.currentTarget.releasePointerCapture(e.pointerId);
             }
         } catch (err) {
             // Ignore
@@ -219,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // iOS sound unlock (keep this)
+    // iOS sound unlock
     document.addEventListener('touchstart', () => {
         if (!window._soundUnlocked) {
             const unlockSound = new Audio();
