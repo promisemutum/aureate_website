@@ -24,8 +24,9 @@
 
 body {
     font-family: var(--primary-font);
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-image: url('./images/landing/background_pc.webp');
     background-size: cover;
     background-position: center;
@@ -34,6 +35,14 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
+    
+    /* Subtle entrance for the whole page */
+    animation: pageLoad 1.5s ease-out forwards;
+}
+
+@keyframes pageLoad {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .overlay {
@@ -47,11 +56,11 @@ body {
 .container {
     position: relative;
     z-index: 2;
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     padding: 2rem;
     
     /* 🔥 ANDROID FIX: Prevents browser from hijacking horizontal swipes */
@@ -65,7 +74,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding-top: 60vh;
-    height: 100%;
+    min-height: 100vh;
     width: 100%;
     max-width: 1200px;
 }
@@ -75,7 +84,10 @@ body {
     justify-content: center;
     align-items: center;
     gap: 4rem;
-    animation: fadeIn 1.5s ease-out;
+    /* Replaced simple fadeIn with the elegant fadeUp */
+    animation: fadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.5s;
+    opacity: 0; /* Initial state */
 }
 
 .carousel {
@@ -170,10 +182,22 @@ body {
     transform: translateY(0);
 }
 
-@keyframes fadeIn {
+/* ── Keyframes ─ */
+@keyframes bookReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -181,11 +205,36 @@ body {
     }
 }
 
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Subtle continuous float for icons on desktop to make it pleasing */
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
 /* Desktop */
 @media (min-width: 769px) {
     .icon-wrapper:hover .icon {
         filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
     }
+    
+    /* Apply gentle float to icons after they load */
+    .icon-wrapper .icon {
+        animation: gentleFloat 6s ease-in-out infinite;
+    }
+    .icon-wrapper:nth-child(2) .icon { animation-delay: 1s; }
+    .icon-wrapper:nth-child(3) .icon { animation-delay: 2s; }
 }
 
 /* Mobile */
@@ -195,13 +244,14 @@ body {
         background-size: cover;
         background-position: center;
         background-attachment: scroll;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .container {
         padding: 1rem;
         perspective: 1000px;
-        overflow: hidden;
+        overflow-x: hidden;
         /* Ensuring touch-action is applied on mobile container */
         touch-action: pan-y pinch-zoom;
     }
@@ -212,8 +262,8 @@ body {
         align-items: center;
         justify-content: flex-start;
         padding-top: 70%;
+        min-height: 100vh;
         width: 100%;
-        height: 100%;
     }
 
     .icons-row {
@@ -314,5 +364,89 @@ body {
     .icon-wrapper.active .icon-label {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* --- ABOUT AUREATE REALM SECTION --- */
+.about-section {
+    width: 100%;
+    margin: 0;
+    padding: 3rem 2vw;
+    
+    /* Semi-transparent burgundy overlay matching the image */
+    background: rgba(110, 25, 25, 0.75); 
+    
+    /* No blur needed for this flat overlay look */
+    backdrop-filter: none; 
+    -webkit-backdrop-filter: none; 
+    
+    position: relative;
+    z-index: 10; 
+    
+    /* Initial state for animation */
+    opacity: 0;
+    /* Using bookReveal for a sophisticated entrance */
+    animation: bookReveal 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+.about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    color: #f5f0e8; /* Soft cream-white for elegance */
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    
+    /* Initial state for animation */
+    opacity: 0;
+    transform: translateY(20px);
+    /* Using fadeUp with a delay */
+    animation: fadeUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.6s;
+}
+
+.about-text {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #f5f0e8; /* Same soft cream-white */
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-align: justify;
+    hyphens: auto;
+    
+    /* Initial state for animation */
+    opacity: 0;
+    transform: translateY(20px);
+    /* Using fadeUp with a longer delay for a staggered effect */
+    animation: fadeUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.9s;
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 3rem 1.5rem;
+    }
+    
+    .about-title {
+        font-size: 1.6rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 1.5rem;
+    }
+    
+    .about-text {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        text-align: left; /* Left align on mobile for better readability */
     }
 }
