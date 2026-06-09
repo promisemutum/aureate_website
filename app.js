@@ -8,9 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastSoundTime = 0;
     const SOUND_DEBOUNCE = 300;
-    const TAP_THRESHOLD = 10; // Max movement to count as tap (px)
+    const TAP_THRESHOLD = 10;
 
-    // Track touch position to distinguish taps from scrolls
     const touchData = {
         startX: 0,
         startY: 0,
@@ -34,34 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Hybrid approach for touch/click differentiation
     iconWrappers.forEach(wrapper => {
         wrapper.addEventListener('pointerdown', (e) => {
-            // Store initial touch position
             touchData.startX = e.clientX;
             touchData.startY = e.clientY;
             touchData.isScrolling = false;
-        }, { passive: true }); 
+        }, { passive: true });
 
         wrapper.addEventListener('pointermove', (e) => {
-            // Calculate movement distance
             const dx = Math.abs(e.clientX - touchData.startX);
             const dy = Math.abs(e.clientY - touchData.startY);
 
-            // If movement exceeds threshold, mark as scroll
             if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) {
                 touchData.isScrolling = true;
             }
         }, { passive: true });
 
         wrapper.addEventListener('pointerup', (e) => {
-            // Play sound ONLY if it was a tap (not scroll)
             if (!touchData.isScrolling) {
                 playClickSound();
             }
         });
 
-        // Also handle click for Desktop
         wrapper.addEventListener('click', (e) => {
             if (window.innerWidth > MOBILE_BREAKPOINT) {
                 playClickSound();
@@ -85,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateActiveState = (rotation) => {
-        // Only run active state logic on mobile
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
 
         const norm = normalizeAngle(-rotation);
@@ -96,22 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
         iconWrappers.forEach((wrapper, i) => {
             const isActive = i === activeIndex;
             wrapper.classList.toggle('active', isActive);
-
-            // Only active icon should receive pointer events (Mobile only)
             wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
         });
     };
 
-    // Initial state check
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
         updateActiveState(0);
     }
 
     const handleStart = (e) => {
-        // Desktop check: Abort if not mobile
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
-        // Only handle primary pointer and ignore if already processed by icon
         if (!e.isPrimary || e.defaultPrevented) return;
 
         isDragging = true;
@@ -123,22 +109,21 @@ document.addEventListener('DOMContentLoaded', () => {
             carousel.style.transition = 'none';
         }
 
-        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
-        // This ensures the capture is set on the container (scene), not a child element that might change during drag.
+        // 🔥 iOS FIX: Use setPointerCapture on the carousel itself
         try {
-            if (e.currentTarget.setPointerCapture) {
-                e.currentTarget.setPointerCapture(e.pointerId);
+            if (carousel && carousel.setPointerCapture) {
+                carousel.setPointerCapture(e.pointerId);
             }
         } catch (err) {
-            // Ignore
+            console.warn('Pointer capture failed:', err);
         }
     };
 
     const handleMove = (e) => {
-        // Desktop check
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
         if (!isDragging || !e.isPrimary) return;
+
+        e.preventDefault(); // 🔥 iOS FIX: Prevent default scrolling during drag
 
         const x = e.clientX;
         const dx = x - lastX;
@@ -155,20 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleEnd = (e) => {
-        // Desktop check
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
-        // This ensures the capture is reliably released from the container.
         try {
-            if (e.currentTarget.releasePointerCapture) {
-                e.currentTarget.releasePointerCapture(e.pointerId);
+            if (carousel && carousel.releasePointerCapture) {
+                carousel.releasePointerCapture(e.pointerId);
             }
         } catch (err) {
-            // Ignore
+            console.warn('Pointer release failed:', err);
         }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
@@ -181,46 +162,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const scene = document.querySelector('.container');
-    if (scene) {
-        scene.addEventListener('pointerdown', handleStart);
-        scene.addEventListener('pointermove', handleMove);
-        scene.addEventListener('pointerup', handleEnd);
-        scene.addEventListener('pointercancel', handleEnd);
-        scene.addEventListener('pointerleave', (e) => {
+    // 🔥 iOS FIX: Attach events to carousel instead of container
+    if (carousel) {
+        carousel.addEventListener('pointerdown', handleStart);
+        carousel.addEventListener('pointermove', handleMove);
+        carousel.addEventListener('pointerup', handleEnd);
+        carousel.addEventListener('pointercancel', handleEnd);
+        carousel.addEventListener('pointerleave', (e) => {
             if (isDragging) {
                 try {
-                    if (scene.releasePointerCapture) {
-                        scene.releasePointerCapture(e.pointerId);
+                    if (carousel.releasePointerCapture) {
+                        carousel.releasePointerCapture(e.pointerId);
                     }
                 } catch (err) {
-                    // Ignore
+                    console.warn('Pointer release failed:', err);
                 }
                 handleEnd(e);
             }
         });
     }
 
-    // Resize Handler with Cleanup
     window.addEventListener('resize', () => {
         if (window.innerWidth <= MOBILE_BREAKPOINT) {
-            // Re-enable mobile state
             updateActiveState(currentRotation);
         } else {
-            // Desktop: Cleanup
             if (carousel) {
                 carousel.style.transform = '';
                 carousel.style.transition = '';
             }
             iconWrappers.forEach(wrapper => {
                 wrapper.classList.remove('active');
-                wrapper.style.pointerEvents = 'auto'; // Re-enable clicks
+                wrapper.style.pointerEvents = 'auto';
             });
             isDragging = false;
         }
     });
 
-    // iOS sound unlock
     document.addEventListener('touchstart', () => {
         if (!window._soundUnlocked) {
             const unlockSound = new Audio();
