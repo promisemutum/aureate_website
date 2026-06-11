@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let dragMoved = false;
     let activeTargetWrapper = null;
 
-    const STEP = 100;
-    const DRAG_SENSITIVITY = 0.2;
+    const STEP = 120;
+    const DRAG_SENSITIVITY = 0.8;
 
     // Mathematical formula for cleanly normalizing angles
     const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
