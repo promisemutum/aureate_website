@@ -10,80 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const SOUND_DEBOUNCE = 300;
     const TAP_THRESHOLD = 10;
 
-    const touchData = {
-        startX: 0,
-        startY: 0,
-        isScrolling: false
-    };
-
-    const playClickSound = () => {
-        const now = Date.now();
-        if (now - lastSoundTime < SOUND_DEBOUNCE) return;
-        lastSoundTime = now;
-
-        const sound = new Audio('./sound/click.wav');
-        sound.play().catch(e => {
-            console.warn("Audio play failed:", e);
-            if (e.name === 'NotAllowedError' && !window._soundUnlocked) {
-                document.body.addEventListener('click', () => {
-                    window._soundUnlocked = true;
-                    sound.play().catch(() => { });
-                }, { once: true });
-            }
-        });
-    };
-
-    iconWrappers.forEach(wrapper => {
-        wrapper.addEventListener('pointerdown', (e) => {
-            touchData.startX = e.clientX;
-            touchData.startY = e.clientY;
-            touchData.isScrolling = false;
-        }, { passive: true });
-
-        wrapper.addEventListener('pointermove', (e) => {
-            const dx = Math.abs(e.clientX - touchData.startX);
-            const dy = Math.abs(e.clientY - touchData.startY);
-
-            if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) {
-                touchData.isScrolling = true;
-            }
-        }, { passive: true });
-
-        wrapper.addEventListener('pointerup', (e) => {
-            if (!touchData.isScrolling) {
-                playClickSound();
-            }
-        });
-
-        wrapper.addEventListener('click', (e) => {
-            if (window.innerWidth > MOBILE_BREAKPOINT) {
-                playClickSound();
-            }
-        });
-    });
-
-    let startX = 0;
-    let lastX = 0;
+    let startX = 0, startY = 0, lastX = 0;
     let currentRotation = 0;
     let isDragging = false;
-    let totalDragDistance = 0;
+    let dragMoved = false;
+    let activeTargetWrapper = null;
 
-    const STEP = 120;
-    const DRAG_SENSITIVITY = 0.5;
+    const STEP = 100;
+    const DRAG_SENSITIVITY = 0.2;
 
-    const normalizeAngle = (angle) => {
-        let a = angle % 360;
-        if (a < 0) a += 360;
-        return a;
-    };
+    // Mathematical formula for cleanly normalizing angles
+    const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
 
     const updateActiveState = (rotation) => {
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
 
         const norm = normalizeAngle(-rotation);
-        let activeIndex = 0;
-        if (norm > 60 && norm <= 180) activeIndex = 1;
-        else if (norm > 180 && norm <= 300) activeIndex = 2;
+        // Map ranges: 0-60 & 300-360 -> 0 | 60-180 -> 1 | 180-300 -> 2
+        const activeIndex = norm > 60 && norm <= 180 ? 1 : (norm > 180 && norm <= 300 ? 2 : 0);
 
         iconWrappers.forEach((wrapper, i) => {
             const isActive = i === activeIndex;
@@ -92,64 +36,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    const playClickSound = () => {
+        const now = Date.now();
+        if (now - lastSoundTime < SOUND_DEBOUNCE) return;
+        lastSoundTime = now;
+
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.warn("Audio play failed:", e));
+    };
+
+    // Global proactive unlock for modern browser audio auto-play restrictions
+    const unlockAudio = () => {
+        if (!window._soundUnlocked) {
+            window._soundUnlocked = true;
+            // Reuse the main instance to unlock audio context
+            clickSound.play().catch(() => {}); 
+        }
+    };
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
         updateActiveState(0);
     }
 
-    const handleStart = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT) return;
-        if (!e.isPrimary || e.defaultPrevented) return;
-
-        isDragging = true;
-        startX = e.clientX;
-        lastX = startX;
-        totalDragDistance = 0;
-
-        if (carousel) {
-            carousel.style.transition = 'none';
-        }
-
-        // 🔥 iOS FIX: Use setPointerCapture on the carousel itself
+    const managePointerCapture = (action, id) => {
         try {
-            if (carousel && carousel.setPointerCapture) {
-                carousel.setPointerCapture(e.pointerId);
+            if (carousel && carousel[`${action}PointerCapture`]) {
+                carousel[`${action}PointerCapture`](id);
             }
         } catch (err) {
-            console.warn('Pointer capture failed:', err);
+            console.warn(`Pointer ${action} capture failed:`, err);
         }
     };
 
+    const handleStart = (e) => {
+        if (window.innerWidth > MOBILE_BREAKPOINT || !e.isPrimary || e.defaultPrevented) return;
+
+        isDragging = true;
+        dragMoved = false;
+        startX = lastX = e.clientX;
+        startY = e.clientY;
+        activeTargetWrapper = e.target.closest('.icon-wrapper');
+
+        if (carousel) carousel.style.transition = 'none';
+        managePointerCapture('set', e.pointerId);
+    };
+
     const handleMove = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT) return;
-        if (!isDragging || !e.isPrimary) return;
+        if (window.innerWidth > MOBILE_BREAKPOINT || !isDragging || !e.isPrimary) return;
 
-        e.preventDefault(); // 🔥 iOS FIX: Prevent default scrolling during drag
+        // 🔥 FIX: Removed e.preventDefault(). 
+        // Because we set `touch-action: pan-y` in the CSS, the browser natively 
+        // allows vertical page scrolling. If we leave preventDefault() here, 
+        // it will trap the user and prevent them from scrolling down to the About section!
 
-        const x = e.clientX;
-        const dx = x - lastX;
-        lastX = x;
-        totalDragDistance += Math.abs(dx);
+        const dx = e.clientX - lastX;
+        lastX = e.clientX;
+
+        if (Math.abs(e.clientX - startX) > TAP_THRESHOLD || Math.abs(e.clientY - startY) > TAP_THRESHOLD) {
+            dragMoved = true;
+        }
 
         currentRotation += dx * DRAG_SENSITIVITY;
-
-        if (carousel) {
-            carousel.style.transform = `rotateY(${currentRotation}deg)`;
-        }
+        if (carousel) carousel.style.transform = `rotateY(${currentRotation}deg)`;
 
         requestAnimationFrame(() => updateActiveState(currentRotation));
     };
 
     const handleEnd = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT) return;
-        if (!isDragging || !e.isPrimary) return;
+        if (window.innerWidth > MOBILE_BREAKPOINT || !isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        try {
-            if (carousel && carousel.releasePointerCapture) {
-                carousel.releasePointerCapture(e.pointerId);
-            }
-        } catch (err) {
-            console.warn('Pointer release failed:', err);
+        managePointerCapture('release', e.pointerId);
+
+        // Treat as a legitimate tap if the threshold boundary wasn't violated
+        if (!dragMoved && activeTargetWrapper) {
+            playClickSound();
         }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
@@ -162,22 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 🔥 iOS FIX: Attach events to carousel instead of container
     if (carousel) {
         carousel.addEventListener('pointerdown', handleStart);
         carousel.addEventListener('pointermove', handleMove);
         carousel.addEventListener('pointerup', handleEnd);
         carousel.addEventListener('pointercancel', handleEnd);
-        carousel.addEventListener('pointerleave', (e) => {
-            if (isDragging) {
-                try {
-                    if (carousel.releasePointerCapture) {
-                        carousel.releasePointerCapture(e.pointerId);
-                    }
-                } catch (err) {
-                    console.warn('Pointer release failed:', err);
-                }
-                handleEnd(e);
+        carousel.addEventListener('pointerleave', handleEnd);
+
+        // Delegated listener dealing with desktop-only interactions 
+        carousel.addEventListener('click', (e) => {
+            if (window.innerWidth > MOBILE_BREAKPOINT && e.target.closest('.icon-wrapper')) {
+                playClickSound();
             }
         });
     }
@@ -197,12 +155,4 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = false;
         }
     });
-
-    document.addEventListener('touchstart', () => {
-        if (!window._soundUnlocked) {
-            const unlockSound = new Audio();
-            unlockSound.play().then(() => unlockSound.remove());
-            window._soundUnlocked = true;
-        }
-    }, { once: true });
 });
