@@ -3,6 +3,8 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
+    
+    // Single reusable preloaded audio instance
     const clickSound = new Audio('./sound/click.wav');
     clickSound.preload = 'auto';
 
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeTargetWrapper = null;
 
     const STEP = 120;
-    const DRAG_SENSITIVITY = 0.8;
+    const DRAG_SENSITIVITY = 1;
 
     // Mathematical formula for cleanly normalizing angles
     const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
