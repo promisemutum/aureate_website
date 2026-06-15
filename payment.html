@@ -39,34 +39,6 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
-            padding-top: 3.5rem; /* Added space for the close button */
-        }
-
-        /* Cross Button Styles */
-        .close-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            color: #d4af37;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            animation: fadeUp 1s ease-out forwards;
-        }
-
-        .close-btn:hover {
-            background: #d4af37;
-            color: #1a1a1a;
-            border-color: #d4af37;
-            transform: rotate(90deg); /* Elegant rotation on hover */
         }
 
         .logo {
@@ -92,6 +64,7 @@
         }
 
         .payment-card {
+            position: relative;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(212, 175, 55, 0.2);
             backdrop-filter: blur(10px);
@@ -99,6 +72,32 @@
             text-align: left;
             opacity: 0;
             animation: fadeUp 1s ease-out 0.4s forwards;
+        }
+
+        /* Cross Button */
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            border-color: #d4af37;
+            transform: rotate(90deg);
         }
 
         .order-summary {
@@ -161,65 +160,80 @@
 
         .tab-content.active { display: block; }
 
-        .input-group { margin-bottom: 1.5rem; }
-
-        .input-group label {
-            display: block;
-            color: rgba(245, 240, 232, 0.7);
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            background: rgba(255, 255, 255, 0.05);
-            color: #f5f0e8;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #d4af37;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .input-group input::placeholder { color: rgba(245, 240, 232, 0.4); }
-
-        .pay-btn {
-            width: 100%;
-            padding: 1.1rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 400;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            border: 1px solid #d4af37;
-            background: transparent;
-            color: #d4af37;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
-
-        .pay-btn:hover {
-            background: #d4af37;
-            color: #1a1a1a;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
-        }
-
         .paypal-desc {
             color: rgba(245, 240, 232, 0.7);
             font-size: 0.9rem;
             line-height: 1.6;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
             text-align: center;
+        }
+
+        /* Payment button wrapper — centers the embedded buttons */
+        .payment-btn-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        /* Override Instamojo button styles to match gold theme */
+        .payment-btn-wrap a[data-store-name="aureaterealmstore"],
+        .payment-btn-wrap .im-checkout-btn,
+        .payment-btn-wrap a.im-checkout-btn {
+            background: transparent !important;
+            color: #d4af37 !important;
+            border: 1px solid #d4af37 !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            padding: 1.1rem !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.95rem !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.2em !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+            text-align: center !important;
+        }
+
+        .payment-btn-wrap a[data-store-name="aureaterealmstore"]:hover,
+        .payment-btn-wrap .im-checkout-btn:hover {
+            background: #d4af37 !important;
+            color: #1a1a1a !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Override Payhip button styles to match gold theme */
+        .payment-btn-wrap a.payhip-buy-button,
+        .payment-btn-wrap .payhip-buy-button {
+            background: transparent !important;
+            color: #d4af37 !important;
+            border: 1px solid #d4af37 !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            padding: 1.1rem !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.95rem !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.2em !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+            text-align: center !important;
+            box-shadow: none !important;
+        }
+
+        .payment-btn-wrap a.payhip-buy-button:hover,
+        .payment-btn-wrap .payhip-buy-button:hover {
+            background: #d4af37 !important;
+            color: #1a1a1a !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2) !important;
         }
 
         .secure-note {
@@ -247,7 +261,6 @@
             .title { font-size: 1.8rem; letter-spacing: 0.1em; }
             .payment-card { padding: 1.5rem; }
             .order-summary .amount { font-size: 1.2rem; }
-            .container { padding-top: 3rem; }
         }
     </style>
 </head>
@@ -255,46 +268,69 @@
     <div class="overlay"></div>
     
     <div class="container">
-        <!-- Cross / Back Button -->
-        <button class="close-btn" onclick="window.history.back();" aria-label="Go back">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-
         <div class="logo">AUREATE REALM</div>
         <h1 class="title">Checkout</h1>
 
         <div class="payment-card">
-            <div class="order-summary">
-                <span class="item">Premium Access</span>
-                <span class="amount">$9.99</span>
-            </div>
+            <!-- Cross / Back Button -->
+            <button class="close-btn" onclick="window.history.back();" aria-label="Go back">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
 
             <div class="tabs">
                 <button class="tab active" data-tab="upi">UPI Payment</button>
                 <button class="tab" data-tab="paypal">PayPal</button>
             </div>
 
+            <!-- UPI Tab — Instamojo -->
             <div class="tab-content active" id="upi">
-                <div class="input-group">
-                    <label for="upi-id">Your UPI ID</label>
-                    <input type="text" id="upi-id" placeholder="username@upi" required>
+                <div class="order-summary">
+                    <span class="item">Purchase Now</span>
+                    <span class="amount">Rs 1,000</span>
                 </div>
-                <button class="pay-btn" onclick="processPayment('UPI')">Pay $9.99</button>
+                <p class="paypal-desc">
+                    You will be securely redirected to our payment partner to complete your UPI transaction.
+                </p>
+                <div class="payment-btn-wrap">
+                    <a href="https://aureaterealmstore.myinstamojo.com/product/the-aureate-doctrine/"
+                       data-store-name="aureaterealmstore"
+                       data-domain="https://aureaterealmstore.myinstamojo.com/"
+                       data-id="7194193"
+                       rel="im-new-checkout"
+                       data-text="Proceed with UPI"
+                       data-layout="vertical"></a>
+                </div>
             </div>
 
+            <!-- PayPal Tab — Payhip -->
             <div class="tab-content" id="paypal">
+                <div class="order-summary">
+                    <span class="item">Purchase Now</span>
+                    <span class="amount">$9.99</span>
+                </div>
                 <p class="paypal-desc">
-                    You will be securely redirected to PayPal's website to complete your transaction.
+                    You will be securely redirected to PayPal to complete your transaction.
                 </p>
-                <button class="pay-btn" onclick="processPayment('PayPal')">Proceed to PayPal</button>
+                <div class="payment-btn-wrap">
+                    <a href="https://payhip.com/b/f6OTQ"
+                       class="payhip-buy-button"
+                       data-theme="neutral"
+                       data-product="f6OTQ">
+                       Proceed with PayPal
+                    </a>
+                </div>
             </div>
         </div>
 
         <p class="secure-note">Encrypted Secure Payment</p>
     </div>
+
+    <!-- Payment Gateway Scripts -->
+    <script src="https://manage.instamojo.com/assets/js/pay_button/button.min.js"></script>
+    <script type="text/javascript" src="https://payhip.com/payhip.js"></script>
 
     <script>
         // Tab Switching Logic
@@ -310,21 +346,6 @@
                 document.getElementById(tab.dataset.tab).classList.add('active');
             });
         });
-
-        // Payment Processing Simulation
-        function processPayment(method) {
-            if (method === 'UPI') {
-                const upiId = document.getElementById('upi-id').value;
-                if (!upiId || !upiId.includes('@')) {
-                    alert('Please enter a valid UPI ID (e.g., name@upi).');
-                    return;
-                }
-                alert(`Initiating UPI payment request to ${upiId}...\nPlease approve it in your UPI app.`);
-            } else {
-                alert('Redirecting to PayPal secure gateway...');
-                // window.location.href = 'YOUR_PAYPAL_CHECKOUT_URL';
-            }
-        }
     </script>
 </body>
 </html>
