@@ -3,39 +3,18 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
-    
-    // Single reusable preloaded audio instance
     const clickSound = new Audio('./sound/click.wav');
     clickSound.preload = 'auto';
 
     let lastSoundTime = 0;
     const SOUND_DEBOUNCE = 300;
-    const TAP_THRESHOLD = 10;
+    const TAP_THRESHOLD = 10; // Max movement to count as tap (px)
 
-    let startX = 0, startY = 0, lastX = 0;
-    let currentRotation = 0;
-    let isDragging = false;
-    let dragMoved = false;
-    let activeTargetWrapper = null;
-
-    const STEP = 120;
-    const DRAG_SENSITIVITY = 1.05;
-
-    // Mathematical formula for cleanly normalizing angles
-    const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
-
-    const updateActiveState = (rotation) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
-        const norm = normalizeAngle(-rotation);
-        // Map ranges: 0-60 & 300-360 -> 0 | 60-180 -> 1 | 180-300 -> 2
-        const activeIndex = norm > 60 && norm <= 180 ? 1 : (norm > 180 && norm <= 300 ? 2 : 0);
-
-        iconWrappers.forEach((wrapper, i) => {
-            const isActive = i === activeIndex;
-            wrapper.classList.toggle('active', isActive);
-            wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
-        });
+    // Track touch position to distinguish taps from scrolls
+    const touchData = {
+        startX: 0,
+        startY: 0,
+        isScrolling: false
     };
 
     const playClickSound = () => {
@@ -43,78 +22,151 @@ document.addEventListener('DOMContentLoaded', () => {
         if (now - lastSoundTime < SOUND_DEBOUNCE) return;
         lastSoundTime = now;
 
-        clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.warn("Audio play failed:", e));
+        const sound = new Audio('./sound/click.wav');
+        sound.play().catch(e => {
+            console.warn("Audio play failed:", e);
+            if (e.name === 'NotAllowedError' && !window._soundUnlocked) {
+                document.body.addEventListener('click', () => {
+                    window._soundUnlocked = true;
+                    sound.play().catch(() => { });
+                }, { once: true });
+            }
+        });
     };
 
-    // Global proactive unlock for modern browser audio auto-play restrictions
-    const unlockAudio = () => {
-        if (!window._soundUnlocked) {
-            window._soundUnlocked = true;
-            // Reuse the main instance to unlock audio context
-            clickSound.play().catch(() => {}); 
-        }
-    };
-    document.addEventListener('touchstart', unlockAudio, { once: true });
-    document.addEventListener('click', unlockAudio, { once: true });
+    // Hybrid approach for touch/click differentiation
+    iconWrappers.forEach(wrapper => {
+        wrapper.addEventListener('pointerdown', (e) => {
+            // Store initial touch position
+            touchData.startX = e.clientX;
+            touchData.startY = e.clientY;
+            touchData.isScrolling = false;
+        }, { passive: true }); 
 
+        wrapper.addEventListener('pointermove', (e) => {
+            // Calculate movement distance
+            const dx = Math.abs(e.clientX - touchData.startX);
+            const dy = Math.abs(e.clientY - touchData.startY);
+
+            // If movement exceeds threshold, mark as scroll
+            if (dx > TAP_THRESHOLD || dy > TAP_THRESHOLD) {
+                touchData.isScrolling = true;
+            }
+        }, { passive: true });
+
+        wrapper.addEventListener('pointerup', (e) => {
+            // Play sound ONLY if it was a tap (not scroll)
+            if (!touchData.isScrolling) {
+                playClickSound();
+            }
+        });
+
+        // Also handle click for Desktop
+        wrapper.addEventListener('click', (e) => {
+            if (window.innerWidth > MOBILE_BREAKPOINT) {
+                playClickSound();
+            }
+        });
+    });
+
+    let startX = 0;
+    let lastX = 0;
+    let currentRotation = 0;
+    let isDragging = false;
+    let totalDragDistance = 0;
+
+    const STEP = 120;
+    const DRAG_SENSITIVITY = 0.5;
+
+    const normalizeAngle = (angle) => {
+        let a = angle % 360;
+        if (a < 0) a += 360;
+        return a;
+    };
+
+    const updateActiveState = (rotation) => {
+        // Only run active state logic on mobile
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
+        const norm = normalizeAngle(-rotation);
+        let activeIndex = 0;
+        if (norm > 60 && norm <= 180) activeIndex = 1;
+        else if (norm > 180 && norm <= 300) activeIndex = 2;
+
+        iconWrappers.forEach((wrapper, i) => {
+            const isActive = i === activeIndex;
+            wrapper.classList.toggle('active', isActive);
+
+            // Only active icon should receive pointer events (Mobile only)
+            wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
+        });
+    };
+
+    // Initial state check
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
         updateActiveState(0);
     }
 
-    const managePointerCapture = (action, id) => {
-        try {
-            if (carousel && carousel[`${action}PointerCapture`]) {
-                carousel[`${action}PointerCapture`](id);
-            }
-        } catch (err) {
-            console.warn(`Pointer ${action} capture failed:`, err);
-        }
-    };
-
     const handleStart = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT || !e.isPrimary || e.defaultPrevented) return;
+        // Desktop check: Abort if not mobile
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
+        // Only handle primary pointer and ignore if already processed by icon
+        if (!e.isPrimary || e.defaultPrevented) return;
 
         isDragging = true;
-        dragMoved = false;
-        startX = lastX = e.clientX;
-        startY = e.clientY;
-        activeTargetWrapper = e.target.closest('.icon-wrapper');
+        startX = e.clientX;
+        lastX = startX;
+        totalDragDistance = 0;
 
-        if (carousel) carousel.style.transition = 'none';
-        managePointerCapture('set', e.pointerId);
+        if (carousel) {
+            carousel.style.transition = 'none';
+        }
+
+        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
+        try {
+            if (e.currentTarget.setPointerCapture) {
+                e.currentTarget.setPointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            // Ignore
+        }
     };
 
     const handleMove = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT || !isDragging || !e.isPrimary) return;
+        // Desktop check
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
 
-        // 🔥 FIX: Removed e.preventDefault(). 
-        // Because we set `touch-action: pan-y` in the CSS, the browser natively 
-        // allows vertical page scrolling. If we leave preventDefault() here, 
-        // it will trap the user and prevent them from scrolling down to the About section!
+        if (!isDragging || !e.isPrimary) return;
 
-        const dx = e.clientX - lastX;
-        lastX = e.clientX;
-
-        if (Math.abs(e.clientX - startX) > TAP_THRESHOLD || Math.abs(e.clientY - startY) > TAP_THRESHOLD) {
-            dragMoved = true;
-        }
+        const x = e.clientX;
+        const dx = x - lastX;
+        lastX = x;
+        totalDragDistance += Math.abs(dx);
 
         currentRotation += dx * DRAG_SENSITIVITY;
-        if (carousel) carousel.style.transform = `rotateY(${currentRotation}deg)`;
+
+        if (carousel) {
+            carousel.style.transform = `rotateY(${currentRotation}deg)`;
+        }
 
         requestAnimationFrame(() => updateActiveState(currentRotation));
     };
 
     const handleEnd = (e) => {
-        if (window.innerWidth > MOBILE_BREAKPOINT || !isDragging || !e.isPrimary) return;
+        // Desktop check
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
+
+        if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        managePointerCapture('release', e.pointerId);
-
-        // Treat as a legitimate tap if the threshold boundary wasn't violated
-        if (!dragMoved && activeTargetWrapper) {
-            playClickSound();
+        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
+        try {
+            if (e.currentTarget.releasePointerCapture) {
+                e.currentTarget.releasePointerCapture(e.pointerId);
+            }
+        } catch (err) {
+            // Ignore
         }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
@@ -127,34 +179,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    if (carousel) {
-        carousel.addEventListener('pointerdown', handleStart);
-        carousel.addEventListener('pointermove', handleMove);
-        carousel.addEventListener('pointerup', handleEnd);
-        carousel.addEventListener('pointercancel', handleEnd);
-        carousel.addEventListener('pointerleave', handleEnd);
-
-        // Delegated listener dealing with desktop-only interactions 
-        carousel.addEventListener('click', (e) => {
-            if (window.innerWidth > MOBILE_BREAKPOINT && e.target.closest('.icon-wrapper')) {
-                playClickSound();
+    const scene = document.querySelector('.container');
+    if (scene) {
+        scene.addEventListener('pointerdown', handleStart);
+        scene.addEventListener('pointermove', handleMove);
+        scene.addEventListener('pointerup', handleEnd);
+        scene.addEventListener('pointercancel', handleEnd);
+        scene.addEventListener('pointerleave', (e) => {
+            if (isDragging) {
+                try {
+                    if (scene.releasePointerCapture) {
+                        scene.releasePointerCapture(e.pointerId);
+                    }
+                } catch (err) {
+                    // Ignore
+                }
+                handleEnd(e);
             }
         });
     }
 
+    // Resize Handler with Cleanup
     window.addEventListener('resize', () => {
         if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            // Re-enable mobile state
             updateActiveState(currentRotation);
         } else {
+            // Desktop: Cleanup
             if (carousel) {
                 carousel.style.transform = '';
                 carousel.style.transition = '';
             }
             iconWrappers.forEach(wrapper => {
                 wrapper.classList.remove('active');
-                wrapper.style.pointerEvents = 'auto';
+                wrapper.style.pointerEvents = 'auto'; // Re-enable clicks
             });
             isDragging = false;
         }
     });
+
+    // iOS sound unlock
+    document.addEventListener('touchstart', () => {
+        if (!window._soundUnlocked) {
+            const unlockSound = new Audio();
+            unlockSound.play().then(() => unlockSound.remove());
+            window._soundUnlocked = true;
+        }
+    }, { once: true });
 });

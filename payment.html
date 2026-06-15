@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aureate Realm - Secure Checkout">
+    <title>Checkout | Aureate Realm</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: url('./images/landing/background_pc.webp') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem 1rem;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(110, 25, 25, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            padding-top: 3.5rem; /* Added space for the close button */
+        }
+
+        /* Cross Button Styles */
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        .close-btn:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            border-color: #d4af37;
+            transform: rotate(90deg); /* Elegant rotation on hover */
+        }
+
+        .logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            color: #d4af37;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 0.1s forwards;
+        }
+
+        .title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #f5f0e8;
+            letter-spacing: 0.15em;
+            margin-bottom: 2.5rem;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 0.2s forwards;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            text-align: left;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 0.4s forwards;
+        }
+
+        .order-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .order-summary .item {
+            color: #f5f0e8;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .order-summary .amount {
+            color: #d4af37;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            color: rgba(245, 240, 232, 0.5);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab:hover { color: rgba(245, 240, 232, 0.8); }
+        
+        .tab.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active { display: block; }
+
+        .input-group { margin-bottom: 1.5rem; }
+
+        .input-group label {
+            display: block;
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #f5f0e8;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-group input::placeholder { color: rgba(245, 240, 232, 0.4); }
+
+        .pay-btn {
+            width: 100%;
+            padding: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid #d4af37;
+            background: transparent;
+            color: #d4af37;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .pay-btn:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .paypal-desc {
+            color: rgba(245, 240, 232, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .secure-note {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(245, 240, 232, 0.4);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 0.6s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 1.8rem; letter-spacing: 0.1em; }
+            .payment-card { padding: 1.5rem; }
+            .order-summary .amount { font-size: 1.2rem; }
+            .container { padding-top: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <div class="container">
+        <!-- Cross / Back Button -->
+        <button class="close-btn" onclick="window.history.back();" aria-label="Go back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="logo">AUREATE REALM</div>
+        <h1 class="title">Checkout</h1>
+
+        <div class="payment-card">
+            <div class="order-summary">
+                <span class="item">Premium Access</span>
+                <span class="amount">$9.99</span>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="upi">UPI Payment</button>
+                <button class="tab" data-tab="paypal">PayPal</button>
+            </div>
+
+            <div class="tab-content active" id="upi">
+                <div class="input-group">
+                    <label for="upi-id">Your UPI ID</label>
+                    <input type="text" id="upi-id" placeholder="username@upi" required>
+                </div>
+                <button class="pay-btn" onclick="processPayment('UPI')">Pay $9.99</button>
+            </div>
+
+            <div class="tab-content" id="paypal">
+                <p class="paypal-desc">
+                    You will be securely redirected to PayPal's website to complete your transaction.
+                </p>
+                <button class="pay-btn" onclick="processPayment('PayPal')">Proceed to PayPal</button>
+            </div>
+        </div>
+
+        <p class="secure-note">Encrypted Secure Payment</p>
+    </div>
+
+    <script>
+        // Tab Switching Logic
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Payment Processing Simulation
+        function processPayment(method) {
+            if (method === 'UPI') {
+                const upiId = document.getElementById('upi-id').value;
+                if (!upiId || !upiId.includes('@')) {
+                    alert('Please enter a valid UPI ID (e.g., name@upi).');
+                    return;
+                }
+                alert(`Initiating UPI payment request to ${upiId}...\nPlease approve it in your UPI app.`);
+            } else {
+                alert('Redirecting to PayPal secure gateway...');
+                // window.location.href = 'YOUR_PAYPAL_CHECKOUT_URL';
+            }
+        }
+    </script>
+</body>
+</html>

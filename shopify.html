@@ -124,6 +124,34 @@
             transform: translateY(-2px);
         }
 
+        /* Cross Button Styles */
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        .close-btn:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            border-color: #d4af37;
+            transform: rotate(90deg); /* Elegant rotation on hover */
+        }
+
+
         .social-links {
             margin-top: 3rem;
             display: flex;
@@ -173,6 +201,13 @@
     <div class="overlay"></div>
     
     <div class="container">
+        <!-- Cross / Back Button -->
+        <button class="close-btn" onclick="window.history.back();" aria-label="Go back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
         <div class="logo">AUREATE REALM</div>
         <h1 class="coming-soon">Coming Soon</h1>
         <p class="message">
