@@ -45,14 +45,18 @@ GLOBAL VARIABLES
 
 body {
     font-family: var(--primary-font);
-    min-height: 100vh;
+    
+    /* 🔥 FIX: Removed background-color so no black can bleed through */
+    
+    /* 🔥 FIX: 100svh (Small Viewport Height) ignores the mobile browser URL bar */
+    min-height: 100vh; 
+    min-height: 100svh; 
+    
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
     display: flex;
     flex-direction: column;
-    
-    /* 🔥 FIX: Removed background-color so no black can bleed through */
 }
 
 body::before {
@@ -61,7 +65,11 @@ body::before {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    
+    /* 🔥 FIX: Matches the exact visible screen height, ignoring the URL bar */
+    height: 100vh; 
+    height: 100svh; 
+    
     z-index: -1;
     background-image: url('./images/landing/background_pc.webp');
     
@@ -84,7 +92,11 @@ body::before {
 .container {
     position: relative;
     z-index: 2;
+    
+    /* 🔥 FIX: 100svh ensures the container ends exactly at the bottom of the visible screen */
     height: 100vh;
+    height: 100svh; 
+    
     width: 100%;
     display: flex;
     align-items: center;
