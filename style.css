@@ -1,6 +1,6 @@
 /* =========================================
-   1. GLOBAL VARIABLES
-   ========================================= */
+GLOBAL VARIABLES
+========================================= */
 :root {
     --primary-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --accent-font: 'Cinzel Decorative', serif;
@@ -13,22 +13,20 @@
 }
 
 /* =========================================
-   2. ICON-SPECIFIC VARIABLES (Scoped)
-   ========================================= */
+2. ICON-SPECIFIC VARIABLES (Scoped)
+========================================= */
 .icon-wrapper:nth-child(1) {
-    --icon-y: -10px; 
+    --icon-y: -10px;
     --icon-base-scale: 1.1;
     --icon-hover-scale: 1.5;
     --icon-active-scale: 1.5;
 }
-
 .icon-wrapper:nth-child(2) {
     --icon-y: 0px;
     --icon-base-scale: 1;
     --icon-hover-scale: 1.1;
     --icon-active-scale: 1.1;
 }
-
 .icon-wrapper:nth-child(3) {
     --icon-y: 0px;
     --icon-base-scale: 0.8;
@@ -37,8 +35,8 @@
 }
 
 /* =========================================
-   3. BASE RESETS & LAYOUT
-   ========================================= */
+3. BASE RESETS & LAYOUT
+========================================= */
 * {
     margin: 0;
     padding: 0;
@@ -53,7 +51,8 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: #0a0a0a; 
+    
+    /* 🔥 FIX: Removed background-color so no black can bleed through */
 }
 
 body::before {
@@ -65,7 +64,11 @@ body::before {
     height: 100vh;
     z-index: -1;
     background-image: url('./images/landing/background_pc.webp');
-    background-size: contain;
+    
+    /* 🔥 FIX: 100% 100% forces the image to fill the screen exactly. 
+       This guarantees 100% visibility AND zero black gaps. */
+    background-size: 100% 100%; 
+    
     background-position: center center;
     background-repeat: no-repeat;
 }
@@ -118,8 +121,8 @@ body::before {
 }
 
 /* =========================================
-   4. ICON & HOVER RESPONSIVENESS
-   ========================================= */
+4. ICON & HOVER RESPONSIVENESS
+========================================= */
 .icon-wrapper {
     display: flex;
     flex-direction: column;
@@ -155,7 +158,6 @@ body::before {
         transform: translateY(var(--icon-y)) scale(var(--icon-hover-scale));
         filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
     }
-
     .icon-wrapper:hover .icon-label {
         opacity: 1;
         transform: translateY(0);
@@ -182,15 +184,15 @@ body::before {
 }
 
 /* =========================================
-   5. ABOUT SECTION
-   ========================================= */
+5. ABOUT SECTION
+========================================= */
 .about-section {
     width: 100%;
     margin: 0;
     padding: 3rem 2vw;
-    background: rgba(110, 25, 25, 0.75); 
+    background: rgba(110, 25, 25, 0.75);
     position: relative;
-    z-index: 10; 
+    z-index: 10;
     border-top: 1px solid rgba(245, 240, 232, 0.15);
     border-bottom: 1px solid rgba(245, 240, 232, 0.15);
 }
@@ -237,11 +239,13 @@ body::before {
 }
 
 /* =========================================
-   6. MOBILE STYLES (Max Width 768px)
-   ========================================= */
+6. MOBILE STYLES (Max Width 768px)
+========================================= */
 @media (max-width: 768px) {
     body::before {
         background-image: url('./images/landing/background_mobile.webp');
+        /* 🔥 FIX: Ensure mobile also stretches to 100% to prevent black gaps */
+        background-size: 100% 100%; 
     }
 
     .container {
@@ -326,17 +330,17 @@ body::before {
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .about-section {
         padding: 3rem 1.5rem;
     }
-    
+
     .about-title {
         font-size: 1.6rem;
         letter-spacing: 0.12em;
         margin-bottom: 1.5rem;
     }
-    
+
     .about-text {
         font-size: 0.95rem;
         line-height: 1.7;
