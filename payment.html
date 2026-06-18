@@ -176,7 +176,7 @@
             min-height: 60px;
         }
 
-        /* Override Instamojo button styles to match gold theme */
+        /* Override Instamojo button styles to match gold theme 
         .payment-btn-wrap a[data-store-name="aureaterealmstore"],
         .payment-btn-wrap .im-checkout-btn,
         .payment-btn-wrap a.im-checkout-btn {
@@ -205,6 +205,7 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
         }
+        */
 
         /* Override Payhip button styles to match gold theme */
         .payment-btn-wrap a.payhip-buy-button,
@@ -281,32 +282,12 @@
             </button>
 
             <div class="tabs">
-                <button class="tab active" data-tab="upi">UPI Payment</button>
-                <button class="tab" data-tab="paypal">PayPal</button>
-            </div>
-
-            <!-- UPI Tab — Instamojo -->
-            <div class="tab-content active" id="upi">
-                <div class="order-summary">
-                    <span class="item">Purchase Now</span>
-                    <span class="amount">Rs 1,000</span>
-                </div>
-                <p class="paypal-desc">
-                    You will be securely redirected to our payment partner to complete your UPI transaction.
-                </p>
-                <div class="payment-btn-wrap">
-                    <a href="https://aureaterealmstore.myinstamojo.com/product/the-aureate-doctrine/"
-                       data-store-name="aureaterealmstore"
-                       data-domain="https://aureaterealmstore.myinstamojo.com/"
-                       data-id="7194193"
-                       rel="im-new-checkout"
-                       data-text="Proceed with UPI"
-                       data-layout="vertical"></a>
-                </div>
+                <!-- <button class="tab active" data-tab="upi">UPI Payment</button> -->
+                <button class="tab active" data-tab="paypal">PayPal</button>
             </div>
 
             <!-- PayPal Tab — Payhip -->
-            <div class="tab-content" id="paypal">
+            <div class="tab-content active" id="paypal">
                 <div class="order-summary">
                     <span class="item">Purchase Now</span>
                     <span class="amount">$9.99</span>
@@ -323,13 +304,28 @@
                     </a>
                 </div>
             </div>
+
+            <!-- UPI Tab — Instamojo
+            <div class="tab-content active" id="upi">
+                <div class="order-summary">
+                    <span class="item">Purchase Now</span>
+                    <span class="amount">Rs 1,000</span>
+                </div>
+                <p class="paypal-desc">
+                    You will be securely redirected to our payment partner to complete your UPI transaction.
+                </p>
+                <div class="payment-btn-wrap">
+                <a href="https://aureaterealmstore.myinstamojo.com/product/the-aureate-doctrine/" data-store-name="aureaterealmstore" data-domain="https://aureaterealmstore.myinstamojo.com" data-id="7194193" rel="im-new-checkout" data-text="UPI" data-css-style="background:#000000; color:#ffffff; width:300px; border-radius:30px" data-image="https://storeassets.im-cdn.com/media-manager/aureaterealmstore/Z1kMrFe8RdOkoc3pUgum_cover.PNG"  data-layout="vertical"  ></a>
+                <script src="https://manage.instamojo.com/assets/js/pay_button/button.min.js"></script>
+                </div>
+            </div> -->
         </div>
 
         <p class="secure-note">Encrypted Secure Payment</p>
     </div>
 
     <!-- Payment Gateway Scripts -->
-    <script src="https://manage.instamojo.com/assets/js/pay_button/button.min.js"></script>
+    <!-- <script src="https://manage.instamojo.com/assets/js/pay_button/button.min.js"></script> -->
     <script type="text/javascript" src="https://payhip.com/payhip.js"></script>
 
     <script>

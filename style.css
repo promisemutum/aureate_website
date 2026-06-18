@@ -17,7 +17,7 @@
    ========================================= */
 .icon-wrapper:nth-child(1) {
     --icon-y: -10px; 
-    --icon-base-scale: 1;
+    --icon-base-scale: 1.1;
     --icon-hover-scale: 1.5;
     --icon-active-scale: 1.5;
 }
