@@ -51,7 +51,7 @@
         .bg {
             position: fixed;
             inset: 0;
-            background: url('./images/ebook/background_pc.PNG') center / cover no-repeat;
+            background: url('./images/ebook/background_pc.png') center / cover no-repeat;
             z-index: 0;
         }
 
@@ -399,6 +399,10 @@
            MOBILE (≤ 768px)
         ═══════════════════════════════════════ */
         @media (max-width: 768px) {
+            .bg {
+                background-image: url('./images/ebook/background_mobile.PNG');
+            }
+
             .hero {
                 padding: 3rem 1.5rem;
             }
@@ -420,7 +424,7 @@
 
     <!-- ══ Hero Section ══ -->
     <section class="hero">
-        <img src="./images/ebook/new_book.PNG" alt="Aureate Doctrine" class="book-img">
+        <img src="./images/ebook/new_book.png" alt="Aureate Doctrine" class="book-img">
         <div class="hero-content">
             <h1 class="title">Aureate Doctrine</h1>
             <p class="subtitle">Step into a world where clarity replaces chaos, and your truest self finally speaks
