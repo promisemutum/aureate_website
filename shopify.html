@@ -217,6 +217,8 @@
         
         <!-- UPDATED FORM WITH WEB3FORMS -->
         <form class="notify-form" id="notifyForm" action="https://api.web3forms.com/submit" method="POST">
+            <!-- Honeypot for bots -->
+            <input type="text" name="botcheck" style="position: absolute; left: -9999px;" tabindex="-1" autocomplete="off">
             <!-- Your Web3Forms Access Key -->
             <input type="hidden" name="access_key" value="4e31db4a-668b-4cec-9aa6-3398a29eac1d">
             <!-- Customizes the subject line of the email you receive -->
@@ -235,21 +237,23 @@
     <!-- JAVASCRIPT TO HANDLE FORM SUBMISSION -->
     <script>
         document.getElementById('notifyForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Stops the page from reloading
+            event.preventDefault();
             
-            // Gather the form data
+            const submitBtn = this.querySelector('button');
+            const originalText = submitBtn.innerText;
+            
+            // Disable button and change text
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Sending...';
+
             const formData = new FormData(this);
             const object = Object.fromEntries(formData);
             const json = JSON.stringify(object);
 
             try {
-                // Send the data to Web3Forms in the background
                 const response = await fetch('https://api.web3forms.com/submit', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: json
                 });
 
@@ -257,12 +261,16 @@
                 
                 if (result.success) {
                     alert('Thank you. You will be notified.');
-                    this.reset(); // Clears the email input field
+                    this.reset();
                 } else {
                     alert('Something went wrong. Please try again.');
                 }
             } catch (error) {
                 alert('Network error. Please try again.');
+            } finally {
+                // Re-enable button no matter what happens
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
             }
         });
     </script>
