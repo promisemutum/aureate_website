@@ -51,6 +51,77 @@
             overflow: hidden;
         }
 
+        /* ═══════════════════════════════════════
+           PRELOADER STYLES
+        ═══════════════════════════════════════ */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s var(--ease), visibility 0.8s;
+        }
+
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-content {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .preloader-title {
+            font-family: var(--font-serif);
+            color: var(--gold);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px var(--gold-dim);
+            opacity: 0;
+            animation: preloaderFadeIn 1s var(--ease) 0.2s forwards;
+        }
+
+        .preloader-bar-container {
+            width: 250px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            opacity: 0;
+            animation: preloaderFadeIn 1s var(--ease) 0.4s forwards;
+        }
+
+        .preloader-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px var(--gold-dim);
+        }
+
+        .preloader-text {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: preloaderFadeIn 1s var(--ease) 0.6s forwards;
+        }
+
+        @keyframes preloaderFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ── Background ── */
         .bg {
             position: fixed;
@@ -578,6 +649,17 @@
 
 <body>
 
+    <!-- ══ PRELOADER ══ -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <h1 class="preloader-title">Aureate Doctrine</h1>
+            <div class="preloader-bar-container">
+                <div class="preloader-bar" id="preloaderBar"></div>
+            </div>
+            <p class="preloader-text" id="preloaderText">Entering the Realm... 0%</p>
+        </div>
+    </div>
+
     <div class="bg"></div>
 
     <!-- ══ Hero Section ══ -->
@@ -633,6 +715,93 @@
     </div>
 
     <script>
+        // ═══════════════════════════════════════
+        // 1. PRELOADER LOGIC
+        // ═══════════════════════════════════════
+        const preloader = document.getElementById('preloader');
+        const preloaderBar = document.getElementById('preloaderBar');
+        const preloaderText = document.getElementById('preloaderText');
+
+        // List all assets (Images and Videos) you want to preload here
+        const assetsToPreload = [
+            './images/ebook/background_pc.webp',
+            './images/ebook/background_mobile.webp',
+            './images/ebook/new_book.webp',
+            './images/ebook/page1.webp',
+            './images/ebook/page2.webp',
+            './images/ebook/page3.webp',
+            './images/ebook/page4.webp'
+            // If you add videos later, just add their paths here:
+            // './videos/intro.mp4',
+        ];
+
+        let loadedCount = 0;
+        // We add +1 to totalAssets to account for the custom fonts loading
+        const totalAssets = assetsToPreload.length + 1; 
+
+        function updateProgress() {
+            loadedCount++;
+            const progress = Math.round((loadedCount / totalAssets) * 100);
+            const displayProgress = Math.min(progress, 100);
+            
+            preloaderBar.style.width = `${displayProgress}%`;
+            preloaderText.textContent = `Entering the Realm... ${displayProgress}%`;
+
+            // When everything is loaded
+            if (loadedCount >= totalAssets) {
+                setTimeout(() => {
+                    preloader.classList.add('loaded');
+                    // Remove from DOM flow after fade-out transition finishes
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                        document.body.style.overflow = ''; // Restore scrolling
+                    }, 800);
+                }, 400); // Slight delay at 100% for a satisfying finish
+            }
+        }
+
+        // Prevent scrolling while the preloader is active
+        document.body.style.overflow = 'hidden';
+
+        // Wait for Google Fonts to finish loading
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(updateProgress).catch(updateProgress);
+        } else {
+            updateProgress(); // Fallback for older browsers
+        }
+
+        // Preload Images and Videos
+        assetsToPreload.forEach(url => {
+            // Simple check to see if the file is a video based on extension
+            const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(url);
+            
+            if (isVideo) {
+                const video = document.createElement('video');
+                video.oncanplaythrough = updateProgress;
+                video.onerror = updateProgress; // Continue even if a video fails
+                video.preload = 'auto';
+                video.src = url;
+                video.load();
+            } else {
+                const img = new Image();
+                img.onload = updateProgress;
+                img.onerror = updateProgress; // Continue even if an image fails
+                img.src = url;
+            }
+        });
+
+        // Failsafe: Force hide preloader after 15 seconds if the network hangs
+        setTimeout(() => {
+            if (!preloader.classList.contains('loaded')) {
+                preloader.classList.add('loaded');
+                document.body.style.overflow = '';
+            }
+        }, 15000);
+
+
+        // ═══════════════════════════════════════
+        // 2. LIGHTBOX LOGIC (Your existing code)
+        // ═══════════════════════════════════════
         const bookLink = document.querySelector('.book-link');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
@@ -697,7 +866,6 @@
             touchEndX = e.changedTouches[0].screenX;
             const diff = touchEndX - touchStartX;
             
-            // Visual feedback during swipe
             if (Math.abs(diff) > 10) {
                 lightboxImg.style.transform = `translateX(${diff * 0.3}px)`;
             }
