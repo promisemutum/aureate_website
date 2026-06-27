@@ -26,6 +26,7 @@ GLOBAL VARIABLES
     --icon-base-scale: 1;
     --icon-hover-scale: 1.1;
     --icon-active-scale: 1.1;
+    margin-right: 30px;
 }
 .icon-wrapper:nth-child(3) {
     --icon-y: 0px;
