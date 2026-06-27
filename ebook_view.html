@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aureate Doctrine</title>
+    <!-- Preload LCP image -->
+    <link rel="preload" as="image" href="./images/ebook/new_book.webp" fetchpriority="high">
+
+    <!-- Non-render-blocking Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500&display=swap"
-        rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500&display=swap"></noscript>
     <style>
         /* ── Variables ── */
         :root {
@@ -585,7 +589,7 @@
     <!-- ══ Hero Section ══ -->
     <section class="hero">
         <a href="#" class="book-link" aria-label="Preview Aureate Doctrine ebook">
-            <img src="./images/ebook/new_book.webp" alt="Aureate Doctrine" class="book-img">
+            <img src="./images/ebook/new_book.webp" alt="Aureate Doctrine" class="book-img" width="600" height="600" fetchpriority="high" decoding="async">
         </a>
         <div class="hero-content">
             <h1 class="title">Aureate Doctrine</h1>
@@ -615,10 +619,10 @@
                 designed to reconnect you with the version of yourself hidden beneath the noise.</p>
 
             <div class="preview-grid">
-                <img src="./images/ebook/page1.webp" class="preview-img" alt="Preview 1" loading="lazy">
-                <img src="./images/ebook/page2.webp" class="preview-img" alt="Preview 2" loading="lazy">
-                <img src="./images/ebook/page3.webp" class="preview-img" alt="Preview 3" loading="lazy">
-                <img src="./images/ebook/page4.webp" class="preview-img" alt="Preview 4" loading="lazy">
+                <img src="./images/ebook/page1.webp" class="preview-img" alt="Preview 1" width="999" height="1500" loading="lazy" decoding="async">
+                <img src="./images/ebook/page2.webp" class="preview-img" alt="Preview 2" width="999" height="1500" loading="lazy" decoding="async">
+                <img src="./images/ebook/page3.webp" class="preview-img" alt="Preview 3" width="999" height="1500" loading="lazy" decoding="async">
+                <img src="./images/ebook/page4.webp" class="preview-img" alt="Preview 4" width="999" height="1500" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
