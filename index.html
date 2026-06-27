@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aureate Realm">
+    <meta name="description" content="Aureate Realm — a space built for those who seek more than surface-level living. Digital works, ebooks, and curated playlists at the intersection of clarity and intention.">
+    <link rel="icon" href="./images/icon.webp" type="image/webp">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -22,12 +23,24 @@
     <meta property="twitter:image" content="./images/landing/background_pc.webp">
 
     <title>Aureate Realm</title>
+
+    <!-- Critical CSS loads synchronously -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Preload LCP background images so browser fetches them early -->
+    <link rel="preload" as="image" href="./images/landing/background_pc.webp" media="(min-width: 769px)">
+    <link rel="preload" as="image" href="./images/landing/background_mobile.webp" media="(max-width: 768px)">
+
+    <!-- Non-blocking Google Fonts: loads asynchronously to avoid render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
+    <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap"
-        rel="stylesheet">
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap">
+    </noscript>
 </head>
 
 <body>
@@ -35,17 +48,18 @@
         <section class="logo-section">
             <nav class="icons-row" aria-label="Product and Social Links">
                 <div class="carousel">
-                    <a href="./ebook_view.html" class="icon-wrapper" aria-label="Music Playlist">
-                        <img src="./images/icons/icon3.webp" alt="" class="icon" aria-hidden="true">
+                    <a href="./ebook_view.html" class="icon-wrapper" aria-label="Digital Products">
+                        <!-- Explicit width/height prevents layout shift (CLS) -->
+                        <img src="./images/icons/icon3.webp" alt="" class="icon" aria-hidden="true" width="200" height="230" loading="eager" decoding="async">
                         <span class="icon-label">Digital Products</span>
                     </a>
                     <a href="https://open.spotify.com/playlist/2P3VgKkwGYKbZaj9J1uBGB?si=WTMp05fjRBatyTLPcx2xnw&pi=XYApmKjQQz-xS"
-                        class="icon-wrapper" aria-label="Digital Products" target="_blank">
-                        <img src="./images/icons/icon1.webp" alt="" class="icon" aria-hidden="true">
+                        class="icon-wrapper" aria-label="Spotify Playlist" target="_blank" rel="noopener noreferrer">
+                        <img src="./images/icons/icon1.webp" alt="" class="icon" aria-hidden="true" width="200" height="230" loading="eager" decoding="async">
                         <span class="icon-label">Playlist</span>
                     </a>
-                    <a href="./shopify.html" class="icon-wrapper" aria-label="Shopify Store">
-                        <img src="./images/icons/icon2.webp" alt="" class="icon" aria-hidden="true">
+                    <a href="./shopify.html" class="icon-wrapper" aria-label="Merch Store">
+                        <img src="./images/icons/icon2.webp" alt="" class="icon" aria-hidden="true" width="200" height="230" loading="eager" decoding="async">
                         <span class="icon-label">Merch</span>
                     </a>
                 </div>
@@ -63,7 +77,8 @@
       </div>
   </section>
   
-    <script src="app.js"></script>
+    <!-- defer: script downloads in parallel but executes after HTML is parsed -->
+    <script src="app.js" defer></script>
 </body>
 
 </html>

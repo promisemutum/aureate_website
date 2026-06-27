@@ -3,8 +3,9 @@ const MOBILE_BREAKPOINT = 768;
 document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const iconWrappers = document.querySelectorAll('.icon-wrapper');
+    // Reuse a single Audio instance to avoid creating new objects on every click
     const clickSound = new Audio('./sound/click.wav');
-    clickSound.preload = 'auto';
+    clickSound.preload = 'none'; // load on first user interaction, not upfront
 
     let lastSoundTime = 0;
     const SOUND_DEBOUNCE = 300;
@@ -21,14 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
         if (now - lastSoundTime < SOUND_DEBOUNCE) return;
         lastSoundTime = now;
-
-        const sound = new Audio('./sound/click.wav');
-        sound.play().catch(e => {
-            console.warn("Audio play failed:", e);
+        // Rewind and play the shared instance
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => {
             if (e.name === 'NotAllowedError' && !window._soundUnlocked) {
                 document.body.addEventListener('click', () => {
                     window._soundUnlocked = true;
-                    sound.play().catch(() => { });
+                    clickSound.play().catch(() => {});
                 }, { once: true });
             }
         });
@@ -102,16 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Initial state check
+    // ─── 3D CAROUSEL: Mobile-only setup ──────────────────────────────────────
+    // Guard the entire drag/snap logic so desktop never allocates these listeners
     if (window.innerWidth <= MOBILE_BREAKPOINT) {
         updateActiveState(0);
     }
 
-    const handleStart = (e) => {
-        // Desktop check: Abort if not mobile
-        if (window.innerWidth > MOBILE_BREAKPOINT) return;
 
-        // Only handle primary pointer and ignore if already processed by icon
+    const handleStart = (e) => {
+        if (window.innerWidth > MOBILE_BREAKPOINT) return;
         if (!e.isPrimary || e.defaultPrevented) return;
 
         isDragging = true;
@@ -119,55 +118,39 @@ document.addEventListener('DOMContentLoaded', () => {
         lastX = startX;
         totalDragDistance = 0;
 
-        if (carousel) {
-            carousel.style.transition = 'none';
-        }
+        if (carousel) carousel.style.transition = 'none';
 
-        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
         try {
             if (e.currentTarget.setPointerCapture) {
                 e.currentTarget.setPointerCapture(e.pointerId);
             }
-        } catch (err) {
-            // Ignore
-        }
+        } catch (err) { /* ignore */ }
     };
 
     const handleMove = (e) => {
-        // Desktop check
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
         if (!isDragging || !e.isPrimary) return;
 
         const x = e.clientX;
         const dx = x - lastX;
         lastX = x;
         totalDragDistance += Math.abs(dx);
-
         currentRotation += dx * DRAG_SENSITIVITY;
 
-        if (carousel) {
-            carousel.style.transform = `rotateY(${currentRotation}deg)`;
-        }
-
+        if (carousel) carousel.style.transform = `rotateY(${currentRotation}deg)`;
         requestAnimationFrame(() => updateActiveState(currentRotation));
     };
 
     const handleEnd = (e) => {
-        // Desktop check
         if (window.innerWidth > MOBILE_BREAKPOINT) return;
-
         if (!isDragging || !e.isPrimary) return;
         isDragging = false;
 
-        // 🔥 ANDROID FIX: Use e.currentTarget instead of e.target
         try {
             if (e.currentTarget.releasePointerCapture) {
                 e.currentTarget.releasePointerCapture(e.pointerId);
             }
-        } catch (err) {
-            // Ignore
-        }
+        } catch (err) { /* ignore */ }
 
         const snapTarget = Math.round(currentRotation / STEP) * STEP;
         currentRotation = snapTarget;
@@ -188,41 +171,37 @@ document.addEventListener('DOMContentLoaded', () => {
         scene.addEventListener('pointerleave', (e) => {
             if (isDragging) {
                 try {
-                    if (scene.releasePointerCapture) {
-                        scene.releasePointerCapture(e.pointerId);
-                    }
-                } catch (err) {
-                    // Ignore
-                }
+                    if (scene.releasePointerCapture) scene.releasePointerCapture(e.pointerId);
+                } catch (err) { /* ignore */ }
                 handleEnd(e);
             }
         });
     }
 
-    // Resize Handler with Cleanup
+    // Resize Handler
     window.addEventListener('resize', () => {
         if (window.innerWidth <= MOBILE_BREAKPOINT) {
-            // Re-enable mobile state
             updateActiveState(currentRotation);
         } else {
-            // Desktop: Cleanup
             if (carousel) {
                 carousel.style.transform = '';
                 carousel.style.transition = '';
             }
             iconWrappers.forEach(wrapper => {
                 wrapper.classList.remove('active');
-                wrapper.style.pointerEvents = 'auto'; // Re-enable clicks
+                wrapper.style.pointerEvents = 'auto';
             });
             isDragging = false;
         }
     });
 
-    // iOS sound unlock
+    // iOS sound unlock on first touch
     document.addEventListener('touchstart', () => {
         if (!window._soundUnlocked) {
-            const unlockSound = new Audio();
-            unlockSound.play().then(() => unlockSound.remove());
+            clickSound.play().then(() => {
+                clickSound.pause();
+                clickSound.currentTime = 0;
+            }).catch(() => {});
             window._soundUnlocked = true;
         }
     }, { once: true });
