@@ -26,7 +26,6 @@ GLOBAL VARIABLES
     --icon-base-scale: 1;
     --icon-hover-scale: 1.1;
     --icon-active-scale: 1.1;
-    margin-right: 30px;
 }
 .icon-wrapper:nth-child(3) {
     --icon-y: 0px;
@@ -150,8 +149,8 @@ body::before {
 }
 
 .icon {
-    width: auto;
-    max-width: 200px;
+    width: 200px;
+    max-width: 100%;
     height: 230px;
     object-fit: contain;
     filter: drop-shadow(var(--shadow-icon));
@@ -173,7 +172,7 @@ body::before {
     }
     .icon-wrapper:hover .icon-label {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(-50%, 0);
     }
 }
 
@@ -190,7 +189,10 @@ body::before {
     color: var(--text-color);
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     opacity: 0;
-    transform: translateY(-10px);
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translate(-50%, -10px);
     transition: opacity var(--transition-standard), transform var(--transition-standard);
     pointer-events: none;
     white-space: nowrap;
@@ -327,21 +329,22 @@ body::before {
     }
 
     .icon-label {
-        margin-top: 0.5rem;
+        margin-top: 0;
         font-size: 1.2rem; 
         opacity: 0;
-        transform: translateY(10px);
+        transform: translate(-50%, 10px);
         transition: all 0.3s ease;
         text-align: center;
         position: absolute;
         bottom: -60px; 
+        left: 50%;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         pointer-events: none;
     }
 
     .icon-wrapper.active .icon-label {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(-50%, 0);
     }
 
     .about-section {
