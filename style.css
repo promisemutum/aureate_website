@@ -215,7 +215,6 @@ body::before {
 .about-content {
     max-width: 1200px;
     margin: 0 auto;
-    margin-bottom: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -238,7 +237,7 @@ body::before {
 }
 
 .about-title {
-    font-family: var(--accent-font);
+    font-family: 'Times New Roman', Times, serif;
     font-size: clamp(1.6rem, 4vw, 2.2rem);
     color: #f1d279;
     text-transform: uppercase;
@@ -258,6 +257,8 @@ body::before {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.8;
+    text-align: center;
+    max-width: 550px;
     text-align: justify;
     margin: 0;
     font-weight: 400;
