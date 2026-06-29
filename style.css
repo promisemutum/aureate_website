@@ -257,8 +257,6 @@ body::before {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.8;
-    text-align: center;
-    max-width: 550px;
     text-align: justify;
     margin: 0;
     font-weight: 400;
